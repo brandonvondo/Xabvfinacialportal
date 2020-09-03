@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Xabvfinacialportal.Enums;
 
 namespace Xabvfinacialportal.Models
 {
@@ -14,7 +15,7 @@ namespace Xabvfinacialportal.Models
         // Parents
         public int HouseholdId { get; set; }
         public string UserId { get; set; }
-        public virtual Houshold Household { get; set; }
+        public virtual Household Household { get; set; }
         public virtual ApplicationUser User { get; set; }
 
         // Bank Account Properties
@@ -34,6 +35,7 @@ namespace Xabvfinacialportal.Models
 
         // Children
         public virtual ICollection<Transaction> Transactions { get; set; }
+        public AccountType AccountType { get; set;}
 
         // Constructor
         public BankAccount(decimal startingBalance, decimal warningBalance, string accountName)

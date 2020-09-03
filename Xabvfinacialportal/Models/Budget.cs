@@ -15,12 +15,22 @@ namespace Xabvfinacialportal.Models
 
         // Parents
         public int HouseHoldId { get; set; }
-        public virtual Houshold Household { get; set; }
+        public virtual Household Household { get; set; }
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
         // Actual Properties
         public DateTime Created { get; set; }
+        [NotMapped]
+        [Display(Name = "Created")]
+        public string CreatedString 
+        {
+            get
+            {
+                string dateString = Created.ToString("MMM dd, yyyy");
+                return dateString;
+            }
+        }
         [Display(Name = "Name")]
         public string BudgetName { get; set; }
         [Display(Name = "Current Amount")]
@@ -32,7 +42,7 @@ namespace Xabvfinacialportal.Models
             get
             {
                 var target = db.BudgetItems.Where(bI => bI.BudgetId == Id ).Count();
-                return target != 0 ? db.BudgetItems.Where(bI => bI.BudgetId == Id ).Sum(s => s.TargetAmount ) : 0
+                return target != 0 ? db.BudgetItems.Where(bI => bI.BudgetId == Id).Sum(s => s.TargetAmount) : 0;
             }
         }
 

@@ -26,7 +26,7 @@ namespace Xabvfinacialportal.Models
         public virtual ICollection<Budget> Budgets { get; set; }
 
         // Constructor
-        public Houshold()
+        public Household()
         {
             Members = new HashSet<ApplicationUser>();
             BankAccounts = new HashSet<BankAccount>();
