@@ -34,6 +34,8 @@ namespace Xabvfinacialportal.Models
             Notifications = new HashSet<Notification>();
             Budgets = new HashSet<Budget>();
             Created = DateTime.Now;
+            IsDeleted = false;
+            Greeting = "Add your custom greeting here!";
         }
 
     }

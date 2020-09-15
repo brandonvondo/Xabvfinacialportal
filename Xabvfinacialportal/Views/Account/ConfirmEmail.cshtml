@@ -1,10 +1,66 @@
-﻿@{
-    ViewBag.Title = "Confirm Email";
-}
+﻿@using Xabvfinacialportal.Models
+@model ForgotPasswordViewModel
 
-<h2>@ViewBag.Title.</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please @Html.ActionLink("Click here to Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-    </p>
-</div>
+@{ Layout = null;}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>xaBvdget Login</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <!-- base:css -->
+    <link href="~/Scripts/vendors/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="~/Scripts/vendors/css/vendor.bundle.base.css" rel="stylesheet" />
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link href="~/Content/css/dstyle.css" rel="stylesheet" />
+    <link href="~/Content/css/custom.css" rel="stylesheet" />
+    <!-- endinject -->
+</head>
+
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper full-page-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper d-flex align-items-center auth px-0">
+                    <div class="row w-100 mx-0">
+                        <div class="col-lg-4 mx-auto">
+                            <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                                <div class="brand-logo">
+                                    <img src="~/images/logo.svg" />
+                                </div>
+                                <div class="card-title">
+                                    <p>Thank you for confirming your email. @Html.ActionLink("Login here!", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- base:js -->
+    <script src="~/Scripts/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="~/Scripts/off-canvas.js"></script>
+    <script src="~/Scripts/hoverable-collapse.js"></script>
+    <script src="~/Scripts/template.js"></script>
+    <script src="~/Scripts/settings.js"></script>
+    <script src="~/Scripts/todolist.js"></script>
+    <script src="~/Scripts/profile-settings.js"></script>
+    <!-- endinject -->
+</body>
+
+</html>

@@ -1,0 +1,219 @@
+﻿
+
+.accname ::-webkit-input-placeholder {
+    color: lightgrey;
+    font-size: 13px;
+}
+
+.accname ::-moz-placeholder {
+    color: lightgrey;
+    font-size: 13px;
+}
+
+.accname :-ms-input-placeholder {
+    color: lightgrey;
+    font-size: 13px;
+}
+
+.accname ::placeholder {
+    color: lightslategray !important;
+    font-size: 13px;
+}
+
+.percbtn {
+    margin-right: 5px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.wizardcard-context {
+    width: 80%;
+    margin-top: 25px;
+}
+.wizard > .content {
+    height: 55vh !important;
+}
+
+.batitle {
+    margin: auto auto;
+}
+
+body {
+    height: 100vh;
+    background: #1e1e2f;
+}
+
+.mouseint:hover {
+    cursor: pointer;
+}
+
+#baContainer {
+    overflow-y: auto;
+    max-height: 59vh;
+}
+
+.budgetNamecontainer {
+    color: #f8f9fa;
+    text-transform: capitalize;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+}
+
+    .budgetNamecontainer:hover {
+        color: #f8f9fa;
+    }
+
+.budgetName {
+    color: #f8f9fa;
+    text-transform: capitalize;
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+    .budgetName:hover {
+        color: #f8f9fa;
+    }
+
+@media (max-width: 991.98px) {
+    .main-panel {
+         padding-top: 0px !important; 
+    }
+}
+
+.errormessage {
+    color: red;
+}
+
+.errorname{
+    border: 2px solid red !important;
+}
+
+#budgetContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    grid-auto-rows: auto;
+    grid-row-gap: 20px;
+}
+
+#budgetitemContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    grid-auto-rows: auto;
+    grid-row-gap: 20px;
+}
+
+.no-bullets {
+    list-style-type: none !important;
+}
+
+.budgettotal {
+    background-color: rgba(0, 0, 0, 0) !important;
+    width: 50%;
+    float: right;
+    text-align: center;
+    border: none !important;
+    cursor: default;
+}
+
+.budgetitemtotal {
+    background-color: rgba(0, 0, 0, 0) !important;
+    width: 100%;
+    text-align: center;
+    border: none !important;
+}
+
+.bihead {
+    margin-bottom: 0px !important;
+}
+
+#output_image {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.logout {
+    cursor: pointer;
+}
+
+.householdinput {
+    color: white !important;
+    background-color: #575d99 !important;
+}
+
+    .householdinput ::placeholder {
+        color: silver !important;
+        font-size: 13px;
+    }
+
+.householdinput ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: silver;
+    font-size: 13px;
+}
+
+.householdinput ::-moz-placeholder { /* Firefox 19+ */
+    color: silver;
+    font-size: 13px;
+}
+
+.householdinput :-ms-input-placeholder { /* IE 10+ */
+    color: silver;
+    font-size: 13px;
+}
+
+.householdinput :-moz-placeholder { /* Firefox 18- */
+    color: silver;
+    font-size: 13px;
+}
+
+.newusercard {
+    margin-top: 10%;
+}
+
+.newusertitle {
+    color: white;
+    position: relative;
+    font-size: 30px;
+    margin-top: 0;
+    font-family: 'Myriad Pro', 'Myriad', helvetica, arial, sans-serif;
+    text-shadow: 2px 3px 3px #292929;
+    letter-spacing: 2px;
+    -webkit-text-stroke: 1px white;
+}
+
+#output_image {
+float: right;
+}
+
+.accountedit-btn {
+    float: right;
+}
+
+.side-col .card{
+    padding:15px;
+    width:90%;
+    margin-bottom: 50px;
+}
+
+.bankaccounttable {
+    padding: 20px;
+}
+
+.onehPnt {
+    width:100%;
+    margin-bottom: 50px;
+}
+
+#membertable {
+    max-height:400px;
+    overflow-y:auto;
+}

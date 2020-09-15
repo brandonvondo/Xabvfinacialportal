@@ -10,7 +10,7 @@ namespace Xabvfinacialportal.Models
         public int Id { get; set; }
 
         // Parents
-        public int HouseHoldId { get; set; }
+        public int? HouseHoldId { get; set; }
         public virtual Household Household { get; set; }
         public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }

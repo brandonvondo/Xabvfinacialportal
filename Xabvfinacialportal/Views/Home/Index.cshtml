@@ -1,31 +1,296 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@using Xabvfinacialportal.Helpers;
+@using Xabvfinacialportal.Extensions;
+@{
+    HouseholdHelper householdHelper = new HouseholdHelper();
+    RoleHelper roleHelper = new RoleHelper();
 }
+@if (User.IsInRole("New User") || User.Identity.GetHouseholdId() == 0)
+{
+    <div class="row">
+        <div class="offset-3 col-6 newusercard">
+            <div class="card card-inverse-primary">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-5 text-center">
+                            <h2 class="newusertitle">Create a Household</h2>
+                        </div>
+                        <div class="col-5 offset-2 text-center">
+                            <h2 class="newusertitle">Join a Household</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset-5 col-2 text-center">
+                            <h1 class="newusertitle">or</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5 text-center">
+                            @using (Html.BeginForm("Create", "Households"))
+                            {
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                @Html.AntiForgeryToken()
+                                @Html.TextBox("HouseHoldName", null, new { @class = "form-control householdinput form-control-lg text-center", @placeholder = "Household Name" })
+                                <br />
+                                <input type="submit" class="btn btn-primary" value="CREATE!" />
+                            }
+                        </div>
+                        <div class="col-5 offset-2 text-center">
+                            @using (Html.BeginForm("ManualJoin", "Account"))
+                            {
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                @Html.AntiForgeryToken()
+                                @Html.TextBox("code", null, new { @class = "form-control householdinput form-control-lg text-center", @placeholder = "Household Code" })
+                                <br />
+                                <input type="submit" class="btn btn-success" value="JOIN!" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    var household = householdHelper.GetUserHousehold();
+    var houseList = household.Members.ToList();
+    var head = roleHelper.FindHouseholdHead(houseList);
+    var members = roleHelper.FindHouseholdMembers(houseList);
+    <div class="row">
+        <h1 class="text-center onehPnt">@household.HouseholdName Dashboard</h1>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <ul class="nav nav-pills nav-pills-success no-bullets" id="pills-tab" role="tablist">
+                <li class="nav-item" id="budget">
+                    <a class="nav-link active" id="pills-budget-tab" data-toggle="pill" href="#pills-budget" role="tab" aria-controls="pills-budget" aria-selected="true">Household Budgets</a>
+                </li>
+                <li class="nav-item" id="bankaccount">
+                    <a class="nav-link" id="pills-bankaccount-tab" data-toggle="pill" href="#pills-bankaccount" role="tab" aria-controls="pills-bankaccount" aria-selected="false">Household Bank Accounts</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget">
+                    @if (household.Budgets.Count > 0)
+                    {
+                        foreach (var budget in household.Budgets.ToList())
+                        {
+                            <div class="card card-inverse-primary">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-6 text-center">
+                                            <h1>Budget: '@budget.BudgetName'</h1>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <h2>Created by @budget.User.DisplayName</h2>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 text-center">
+                                            <h3>Target Amount: @budget.TargetAmount</h3>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <h3>Current Amount: @budget.CurrentAmount</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <ul>
+                                                @if (budget.Items.Count > 0)
+                                                {
+                                                    foreach (var item in budget.Items.ToList())
+                                                    {
+                                                        <li>
+                                                            <div class="row">
+                                                                <div class="col-12 text-center">
+                                                                    <h3>Budget Item: '@item.ItemName'</h3>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-6 text-center">
+                                                                    <h5>Target Amount: @budget.TargetAmount</h5>
+                                                                </div>
+                                                                <div class="col-6 text-center">
+                                                                    <h5>Current Amount: @budget.CurrentAmount</h5>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <li>
+                                                        <h3 class="text-center">No Budget Items for '@budget.BudgetName'</h3>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                        <div class="col-4">
+                                            graph placeholder
+                                        </div>
+                                    </div>
+                                </div>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="card card-inverse-primary">
+                            <div class="card-body">
+                                <h1>There are no budgets for this household.</h1>
+                            </div>
+                        </div>
+                    }
+                </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+                <div class="tab-pane fade" id="pills-bankaccount" role="tabpanel" aria-labelledby="pills-bankaccount">
+                    <div class="card">
+                        <div class="table-responsive bankaccounttable">
+                            <table id="bankaccounttable" class="table order-listing">
+                                <thead>
+                                    <tr>
+                                        <th>Account Name</th>
+                                        <th>Account Owner</th>
+                                        <th>Account Balance</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (household.BankAccounts.ToList().Count > 0)
+                                    {
+                                        foreach (var account in household.BankAccounts.ToList())
+                                        {
+
+                                            <tr>
+                                                <td>@account.AccountName</td>
+                                                <td>@account.User.FullName</td>
+                                                <td>$@account.CurrentBalance</td>
+                                                <td>
+                                                    <button class="btn btn-outline-primary">View</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>Name Here</td>
+                                            <td>Owner Here</td>
+                                            <td>Balance Here</td>
+                                            <td>Add an Account to get started</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 side-col">
+            @if (User.IsInRole("Head"))
+            {
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Invite Members</h2>
+                            @using (Html.BeginForm("Create", "Invitation"))
+                            {
+                                <br />
+                                @Html.AntiForgeryToken()
+                                @Html.TextBox("Email", null, new { @class = "form-control householdinput form-control-lg text-center", @placeholder = "Recipient Email" })
+                                <br />
+                                <input type="submit" class="btn btn-success" value="INVITE!" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="membertable" class="table order-listing">
+                                <thead>
+                                    <tr>
+                                        <th>Members</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@head.FullName <i class="mdi mdi-crown"></i></td>
+                                        <td>
+                                            @if (head.Accounts.ToList().Count > 0)
+                                            {
+                                                var id = "dropdownAccounts" + $"{head.DisplayName}";
+                                                <div class="dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button" id=@id data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="mdi mdi-bank"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby=@id>
+                                                        <h6 class="dropdown-header">Accounts</h6>
+                                                        @foreach (var account in head.Accounts.ToList())
+                                                        {
+                                                            <a class="dropdown-item" href=@Url.Action("Details","BankAccount", new { id = account.Id })>@account.AccountName</a>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                    @if (members.Count > 0)
+                                    {
+                                        foreach (var member in members)
+                                        {
+
+                                            <tr>
+                                                <td>@member.FullName</td>
+                                                <td>
+                                                    @if (member.Accounts.ToList().Count > 0)
+                                                    {
+                                                        var id = $"dropdownAccounts{member.DisplayName}";
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-primary dropdown-toggle" type="button" id=@id data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="mdi mdi-bank"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby=@id>
+                                                                <h6 class="dropdown-header">Accounts</h6>
+                                                                @foreach (var account in member.Accounts.ToList())
+                                                                {
+                                                                    <a class="dropdown-item" href=@Url.Action("Details", "BankAccount", new { id = account.Id })>@account.AccountName</a>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Need to leave the Household?</h2>
+                        <h5>Warning: you WILL have to be reinvited to join back!</h5>
+                        @using (Html.BeginForm("LeaveAsyncHH", "Household"))
+                        {
+                            <br />
+                            @Html.AntiForgeryToken()
+                            <br />
+                            <input type="submit" class="btn btn-danger" value="LEAVE?" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+}

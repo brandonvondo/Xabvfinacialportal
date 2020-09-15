@@ -1,98 +1,146 @@
 ﻿@model Xabvfinacialportal.Models.BankAccount
+    @using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div class="col-10 offset-1">
+    <div class="row">
+        <div class="col-9">
+            <div class="row">
+                <h1 class="text-center onehPnt">
+                    @Model.AccountName
+                    @if (User.Identity.GetUserId() == Model.UserId)
+                    {
 
-<div>
-    <h4>BankAccount</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Household.HouseholdName)
-        </dt>
+                        <button class="btn btn-primary btn-icon accountedit-btn"><i class="mdi mdi-pencil"></i></button>
+                    }
+                </h1>
+            </div>
+            <div class="row">
+                <ul class="nav nav-pills nav-pills-success no-bullets" id="pills-tab" role="tablist">
+                    <li class="nav-item" id="dashboard">
+                        <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-dashboard" aria-selected="true">Dashboard</a>
+                    </li>
+                    @*<li class="nav-item" id="history">
+                        <a class="nav-link" id="pills-history-tab" data-toggle="pill" href="#pills-history" role="tab" aria-controls="pills-history" aria-selected="false">History</a>
+                    </li>*@
+                    <li class="nav-item" id="transactions">
+                        <a class="nav-link" id="pills-transactions-tab" data-toggle="pill" href="#pills-transactions" role="tab" aria-controls="pills-transactions" aria-selected="false">Transactions</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
 
-        <dd>
-            @Html.DisplayFor(model => model.Household.HouseholdName)
-        </dd>
+                    <div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.User.FirstName)
-        </dt>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h2 class="text-center">Current Balance:</h2>
+                                    <br />
+                                    @Model.CurrentBalance
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <h2 class="text-center">Starting Balance: </h2>
+                                <br />
+                                @Model.StartingBalance
+                            </div>
+                            <div class="col-6">
+                                <h2 class="text-center">
+                                    Warning Balance @if (User.Identity.GetUserId() == Model.UserId)
+                                    {
 
-        <dd>
-            @Html.DisplayFor(model => model.User.FirstName)
-        </dd>
+                                        <button class="btn btn-primary btn-icon accountedit-btn"><i class="mdi mdi-pencil"></i></button>
+                                    }
+                                </h2>
+                                <br />
+                                @Model.WarningBalance
+                            </div>
+                        </div>
+                    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.AccountName)
-        </dt>
+                    @*<div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history">
+                    </div>*@
 
-        <dd>
-            @Html.DisplayFor(model => model.AccountName)
-        </dd>
+                    <div class="tab-pane fade" id="pills-transactions" role="tabpanel" aria-labelledby="pills-transactions">
+                        <table id="transactiontable" class="table order-listing">
+                            <thead>
+                                <tr>
+                                    <th>Creator Name</th>
+                                    <th>Transaction Amount</th>
+                                    <th>Budget Item</th>
+                                    <th>Transaction Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Transactions.ToList().Count > 0)
+                                {
+                                    foreach (var transaction in Model.Transactions.ToList())
+                                    {
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
+                                        <tr>
+                                            <td>@transaction.User.FullName</td>
+                                            <td>$ @transaction.Amount</td>
+                                            <td>@transaction.BudgetItem.ItemName</td>
+                                            <td>@transaction.TransactionType</td>
+                                            <td>
+                                                <button class="btn btn-outline-primary">View</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>Name Here</td>
+                                        <td>Amount Here</td>
+                                        <td>Item Here</td>
+                                        <td>Transaction Type</td>
+                                        <td>Create some Transactions to begin</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Created)
-        </dd>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                @if (User.Identity.GetUserId() != Model.UserId)
+                {
+                    <h1 class="mb-5">Owner: @Model.User.FullName</h1>
+                }
+            </div>
+            <div class="row">
+                <h1 class="mb-5">@Html.ActionLink("Return to Household", "Index", "Home")</h1>
+            </div>
+            <div class="row mt-5">
+                <div class="card">
+                    <div class="dropdown-menu" aria-labelledby="dropdownTransaction">
+                        <h6 class="dropdown-header">Create a Transaction</h6>
+                        <a class="dropdown-item" href="#">Transfer</a>
+                        @if (User.Identity.GetUserId() == Model.UserId)
+                        {
+                            <a class="dropdown-item" href="#">Withdraw</a>
+                            <a class="dropdown-item" href="#">Desposit</a>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedString)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreatedString)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StartingBalance)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartingBalance)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CurrentBalance)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CurrentBalance)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.WarningBalance)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.WarningBalance)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsDeleted)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.AccountType)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AccountType)
-        </dd>
-
-    </dl>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

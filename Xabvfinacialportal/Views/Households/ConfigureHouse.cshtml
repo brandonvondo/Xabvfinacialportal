@@ -1,0 +1,305 @@
+﻿@model Xabvfinacialportal.ViewModels.ConfigureHouseVM
+@{ Layout = null;}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>xaBvdget</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <!-- base:css -->
+    <link href="~/Scripts/vendors/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="~/Content/css/vendor.bundle.base.css" rel="stylesheet" />
+    <link href="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.css" rel="stylesheet" />
+    <link href="~/Content/css/wizardanimations.css" rel="stylesheet" />
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link href="~/Content/css/dstyle.css" rel="stylesheet" />
+    <link href="~/Content/css/custom.css" rel="stylesheet" />
+    <link href="~/Scripts/vendors/x-editable/bootstrap-editable.css" rel="stylesheet" />
+    <!-- endinject -->
+    <style type="text/css">
+        html, body {
+            overflow: auto;
+        }
+
+        .wizard .content {
+            overflow-x: hidden;
+            height: 70vh !important;
+        }
+
+        .content-wrapper {
+            height: 100vh;
+        }
+
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #1F484B;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #6C50F3;
+        }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                background: #6C50F3;
+            }
+
+        .wizardbody {
+            height: 95vh;
+        }
+
+        .content-wrapper {
+            padding-top: 1vh;
+        }
+
+        input {
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid page-body-wrapper">
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-12 grid-margin">
+                        <div class="card">
+                            <div class="card-body wizardbody">
+                                <h4 class="card-title">Household Quickstart</h4>
+                                <form id="householdwizard" action="#">
+                                    <div>
+                                        <h3>Bank Account Creation</h3>
+                                        <section>
+                                            <div class="bahead mb-2">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <h2>Bank Account Creation <button id="addBankbtn" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="right" title="Add an Additional Account" data-custom-class="tooltip-primary"><i class="mdi mdi-plus"></i></button></h2>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+
+                                                            <div class="col-6">
+                                                                <h4 class="text-right"><span id="minAllBa" class="btn btn-primary mouseint btn-rounded">Minimize All</span></h4>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <h4 class="text-right" id="baCount">Accounts being created: 1</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="baContainer">
+                                                <div id="bankAccount1card" class="card card-inverse-success wizardcard-context">
+                                                    <div class="card-header mt-1">
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <button onclick="minBa(this.name)" name="bankAccount1" class="btn btn-rounded btn-primary btn-icon" type="button"><i class="mdi mdi-window-minimize"></i></button>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="card-title batitle">Bank Account: <span id="bankAccount1ns"></span></div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="bankAccount1body" class="card-body bankcardbody">
+                                                        <div class="container bankAccount1 mt-3">
+                                                            <div class="row">
+                                                                <div class="col-4">
+                                                                    <div class="form-group">
+                                                                        <label>Account Name</label>
+                                                                        <input id="bankAccount1name" onkeyup="nameUpdate(this.id)" class="form-control accname required" placeholder="Sample Account Name" value="My First Account">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4 offset-2">
+                                                                    <div class="card-title">
+                                                                        <h6>Suggested Warning Balance Amounts:</h6>
+                                                                    </div>
+                                                                    <div class="buttonbox">
+                                                                        <div onclick="percBtn(this.id)" id="bankAccount1-66" class="btn btn-dark btn-rounded percbtn">66%</div>
+                                                                        <div onclick="percBtn(this.id)" id="bankAccount1-50" class="btn btn-dark btn-rounded percbtn">50%</div>
+                                                                        <div onclick="percBtn(this.id)" id="bankAccount1-33" class="btn btn-dark btn-rounded percbtn">33%</div>
+                                                                        <div onclick="percBtn(this.id)" id="bankAccount1-20" class="btn btn-dark btn-rounded percbtn">20%</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-4">
+                                                                    <div class="form-group">
+                                                                        <label>Starting Balance</label>
+                                                                        <input id="bankAccount1startbal" class="form-control required" data-inputmask="'alias': 'currency'" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4 offset-2">
+                                                                    <div class="form-group">
+                                                                        <label>Warning Balance</label>
+                                                                        <input id="bankAccount1warningbal" class="form-control required" data-inputmask="'alias': 'currency'" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </section>
+                                        <h3>Budget Creation</h3>
+
+                                        <section>
+                                            <div class="bahead mb-2">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <h2>Budget Creation <button id="addBudgetBtn" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="right" title="Add an Additional Budget Category" data-custom-class="tooltip-primary"><i class="mdi mdi-plus"></i></button></h2>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-6 offset-6">
+                                                                <h4 class="text-right" id="budgetCount">Budgets being created: 1</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="budgetContainer">
+                                                <div id="budget1card" class="card card-inverse-success wizardcard-context budgetcard mt-4 mb-4">
+                                                    <div class="card-header">
+                                                        <div class="row">
+                                                            <div class="col-2">
+                                                                <button id="budgetInfo" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="top" title="Click the Budget Name to edit inline" data-custom-class="tooltip-primary"><i class=" mdi mdi-information-variant"></i></button>
+                                                            </div>
+                                                            <div class="col-8 text-center">
+                                                                <p class="budgetNamecontainer">Budget:</p> <br />
+                                                                <a href="#" id="budget1name" name="budget1" onchange="binameUpdate(this.name)" data-type="text" class="budgetName budgetNamecontainer">My First Budget</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <h3>Budget Items</h3>
+                                        <section>
+                                            <div id="bitabs">
+                                                <ul class="nav nav-pills nav-pills-success no-bullets" id="pills-tab" role="tablist">
+                                                    <li class="nav-item" id="budget1list">
+                                                        <a class="nav-link active" id="pills-budget1itemc-tab" data-toggle="pill" href="#pills-budget1itemc" role="tab" aria-controls="pills-budget1itemc" aria-selected="true">My First Budget</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="tab-content" id="pills-tabContent">
+                                                    <div class="tab-pane fade show active" id="pills-budget1itemc" role="tabpanel" aria-labelledby="pills-budget1itemc-tab">
+
+                                                        <div class="bahead mb-2">
+                                                            <div class="row">
+                                                                <div class="col-3">
+                                                                    <h2>Budget Item Creation <button onclick="biCreate(this.name)" name="budget1itemContainer" data-budget="budget1itemc" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="right" title="Add an Additional Item" data-custom-class="tooltip-primary"><i class="mdi mdi-plus"></i></button></h2>
+                                                                </div>
+                                                                <div class="col-9">
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <h3 class="text-right">
+                                                                                Budget Total: <input id="budget1itemctotal" class="budgettotal text-center" data-inputmask="'alias': 'currency'" readonly />
+                                                                            </h3>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <h4 class="text-right" id="budget1itemCount">Budget Items being created: 1</h4>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="budget1itemContainer">
+                                                            <div id="budget1itemc1card" name="budget1item" class="card card-inverse-success wizardcard-context">
+                                                                <div class="card-header bihead mt-1">
+                                                                    <div class="row">
+                                                                        <div class="col-1">
+                                                                            <button id="budgetInfo" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="top" title="A budget item is a category within a budget e.g. budget 'Household Expenses' with budget item 'Food'" data-custom-class="tooltip-primary"><i class=" mdi mdi-information-variant"></i></button>
+                                                                        </div>
+                                                                        <div class="col-3">
+                                                                            <div class="card-title batitle text-right">
+                                                                                <a href="#" id="budget1item1name" onchange="binameUpdate(this.id)" data-type="text" class="budgetName budgetNamecontainer">Sample Item</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="offset-1 col-3">
+                                                                            Target Amount:
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <input id="budget1item1target" class="budgetitemtotal text-center" data-inputmask="'alias': 'currency'" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <h3>Review & Finish</h3>
+                                        <section>
+                                            <h3>Finish</h3>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="checkbox" type="checkbox">
+                                                    I agree with the Terms and Conditions.
+                                                </label>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- content-wrapper ends -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- base:js -->
+    <script src="~/Scripts/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="~/Scripts/off-canvas.js"></script>
+    <script src="~/Scripts/hoverable-collapse.js"></script>
+    <script src="~/Scripts/template.js"></script>
+    <script src="~/Scripts/settings.js"></script>
+    <script src="~/Scripts/todolist.js"></script>
+    <script src="~/Scripts/profile-settings.js"></script>
+    <!-- endinject -->
+    <script src="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.js"></script>
+    <script src="~/Scripts/vendors/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/Scripts/vendors/inputmask/jquery.inputmask.bundle.js"></script>
+    <script src="~/Scripts/vendors/inputmask/inputmask.binding.js"></script>
+    <script src="~/Scripts/vendors/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/Scripts/vendors/chart.js/Chart.min.js"></script>
+    <script src="~/Scripts/vendors/progressbar.js/progressbar.min.js"></script>
+    <script src="~/Scripts/vendors/chartjs-plugin-datalabels/chartjs-plugin-datalabels.js"></script>
+    <script src="~/Scripts/vendors/justgage/justgage.js"></script>
+    <script src="~/Scripts/vendors/justgage/raphael-2.1.4.min.js"></script>
+    <script src="~/Scripts/vendors/x-editable/bootstrap-editable.min.js"></script>
+
+    <!-- Custom js for this page-->
+    <script src="~/Scripts/todolist.js"></script>
+    <script src="~/Scripts/dashboard.js"></script>
+    <script src="~/Scripts/My Custom/HouseholdWizard.js"></script>
+    <!-- End custom js for this page-->
+</body>
+</html>

@@ -20,7 +20,7 @@ namespace Xabvfinacialportal.Models
         [Required]
         [StringLength(20, ErrorMessage = "Please keep your Last Name between 2 and 50 characters", MinimumLength = 2)]
         public string LastName { get; set; }
-
+        public string DisplayName { get; set; }
         public int? HouseholdId { get; set; }
         public Household Household { get; set; }
         public string AvatarPath { get; set; }
@@ -50,6 +50,10 @@ namespace Xabvfinacialportal.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            var hhId = HouseholdId != null ? HouseholdId.ToString() : "";
+            userIdentity.AddClaim(new Claim("HouseholdId", hhId));
+            userIdentity.AddClaim(new Claim("FullName", FullName));
+            userIdentity.AddClaim(new Claim("AvatarPath", AvatarPath));
             return userIdentity;
         }
     }

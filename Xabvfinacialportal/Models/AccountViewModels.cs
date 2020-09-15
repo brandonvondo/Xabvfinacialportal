@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 
 namespace Xabvfinacialportal.Models
 {
@@ -13,6 +15,31 @@ namespace Xabvfinacialportal.Models
     public class ExternalLoginListViewModel
     {
         public string ReturnUrl { get; set; }
+    }
+
+    public class ExtendedRegisterViewModel : RegisterViewModel
+    {
+        [Required]
+        [MaxLength(20, ErrorMessage = "Username must be between 2 and 20 characters")]
+        [MinLength(2, ErrorMessage = "Username must be between 2 and 20 characters")]
+        public string FirstName { get; set; }
+        [Required]
+        [MaxLength(40, ErrorMessage = "Username must be between 2 and 40 characters")]
+        [MinLength(2, ErrorMessage = "Username must be between 2 and 40 characters")]
+        public string LastName { get; set; }
+        [Required]
+        [MaxLength(16,ErrorMessage = "Username must be between 2 and 16 characters")]
+        [MinLength(2, ErrorMessage = "Username must be between 2 and 16 characters")]
+        public string DisplayName { get; set; }
+        public HttpPostedFileBase AvatarPath { get; set; }
+
+    }
+
+    public class AcceptInvitationVM : ExtendedRegisterViewModel
+    {
+        public int InvitationId { get; set; }
+        public Guid Code { get; set; }
+        public int HouseHoldId { get; set; }
     }
 
     public class SendCodeViewModel

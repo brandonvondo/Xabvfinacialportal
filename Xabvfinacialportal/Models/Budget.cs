@@ -33,8 +33,16 @@ namespace Xabvfinacialportal.Models
         }
         [Display(Name = "Name")]
         public string BudgetName { get; set; }
+        [NotMapped]
         [Display(Name = "Current Amount")]
-        public decimal CurrentAmount { get; set; }
+        public decimal CurrentAmount // What the user expects to spend in a category for a time period
+        {
+            get
+            {
+                var target = db.BudgetItems.Where(bI => bI.BudgetId == Id).Count();
+                return target != 0 ? db.BudgetItems.Where(bI => bI.BudgetId == Id).Sum(s => s.CurrentAmount) : 0;
+            }
+        }
         [NotMapped]
         [Display(Name = "Target Amount")]
         public decimal TargetAmount // What the user expects to spend in a category for a time period

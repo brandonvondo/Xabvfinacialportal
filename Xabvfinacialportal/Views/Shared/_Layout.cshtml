@@ -1,44 +1,304 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using Xabvfinacialportal.Helpers;
+@using Xabvfinacialportal.Extensions;
+@{
+    UserHelper userHelper = new UserHelper();
+    RoleHelper roleHelper = new RoleHelper();
+    var me = userHelper.GetUser();
+    var role = roleHelper.ListUserRole();
+}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>xaBvdget</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <!-- base:css -->
+    <link href="~/Scripts/vendors/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="~/Content/css/vendor.bundle.base.css" rel="stylesheet" />
+    <link href="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.css" rel="stylesheet" />
+    <link href="~/Scripts/vendors/datatables.net-bs4/dataTables.bootstrap4.css" rel="stylesheet" />
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link href="~/Content/css/dstyle.css" rel="stylesheet" />
+    <link href="~/Content/css/custom.css" rel="stylesheet" />
+    <!-- endinject -->
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <div class="container-scroller">
+        <!-- partial:partials/_horizontal-navbar.html -->
+        <div class="horizontal-menu">
+            <nav class="navbar top-navbar col-lg-12 col-12 p-0">
+                <div class="container-fluid">
+                    <div class="navbar-menu-wrapper d-flex align-items-center justify-content-between">
+                        <ul class="navbar-nav navbar-nav-left">
+                            <li class="nav-item ml-0 mr-5 d-lg-flex d-none">
+                                <a href="#" class="nav-link horizontal-nav-left-menu profile-settings-open"><i class="mdi mdi-format-list-bulleted"></i></a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
+                                    <i class="mdi mdi-bell mx-0"></i>
+                                    <span class="count bg-success">2</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                                    <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                                    <a class="dropdown-item preview-item">
+                                        <div class="preview-thumbnail">
+                                            <div class="preview-icon bg-success">
+                                                <i class="mdi mdi-information mx-0"></i>
+                                            </div>
+                                        </div>
+                                        <div class="preview-item-content">
+                                            <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                                            <p class="font-weight-light small-text mb-0 text-muted">
+                                                Just now
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item preview-item">
+                                        <div class="preview-thumbnail">
+                                            <div class="preview-icon bg-warning">
+                                                <i class="mdi mdi-settings mx-0"></i>
+                                            </div>
+                                        </div>
+                                        <div class="preview-item-content">
+                                            <h6 class="preview-subject font-weight-normal">Settings</h6>
+                                            <p class="font-weight-light small-text mb-0 text-muted">
+                                                Private message
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item preview-item">
+                                        <div class="preview-thumbnail">
+                                            <div class="preview-icon bg-info">
+                                                <i class="mdi mdi-account-box mx-0"></i>
+                                            </div>
+                                        </div>
+                                        <div class="preview-item-content">
+                                            <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                            <p class="font-weight-light small-text mb-0 text-muted">
+                                                2 days ago
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link count-indicator "><i class="mdi mdi-message-reply-text"></i></a>
+                            </li>
+                        </ul>
+                        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                            <a class="navbar-brand brand-logo" href=@Url.Action("Index","Home")><img src="~/images/logo.svg" alt="logo" /></a>
+                            <a class="navbar-brand brand-logo-mini" href=@Url.Action("Index","Home")><img src="~/images/logo.svg" alt="logo" /></a>
+                        </div>
+                        <ul class="navbar-nav navbar-nav-right">
+                            <li class="nav-item dropdown d-lg-flex d-none">
+                                <button type="button" class="btn btn-inverse-dark btn-sm">Settings</button>
+                            </li>
+                            <li class="nav-item nav-profile dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                                    <span class="nav-profile-name">@me.FirstName</span>
+                                    <span class="online-status"></span>
+                                    <img src=@me.AvatarPath alt="profile" />
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                                    <a class="dropdown-item">
+                                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <div class="logout" onclick="logout()">
+                                                <i class="mdi mdi-logout text-primary"></i>
+                                                Logout
+                                            </div>
+                                        }
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                        @if (User.Identity.GetHouseholdId() != 0)
+                        {
+                            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
+                                <span class="mdi mdi-menu"></span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </nav>
+            @if (User.Identity.GetHouseholdId() != 0)
+            {
+                <nav class="bottom-navbar">
+                    <div class="container">
+                        <ul class="nav page-navigation">
+                            <li class="nav-item">
+                                <a class="nav-link" href=@Url.Action("Index","Home")>
+                                    <i class="mdi mdi-file-document-box menu-icon"></i>
+                                    <span class="menu-title">Dashboard</span>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href=@Url.Action("WhatsNew","Household")>
+                                        <i class="mdi mdi-fire menu-icon"></i>
+                                        <span class="menu-title">What's new?</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class=" mdi mdi-bank menu-icon"></i>
+                                        <span class="menu-title">Bank Accounts</span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="submenu">
+                                        <ul class="submenu-item">
+                                            <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">My Accounts</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="pages/forms/advanced_elements.html">Household Accounts</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class=" mdi mdi-format-list-bulleted menu-icon"></i>
+                                        <span class="menu-title">Transactions</span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="submenu">
+                                        <ul class="submenu-item">
+                                            <li class="nav-item"><a class="nav-link" href="pages/apps/email.html">Email</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="pages/apps/calendar.html">Calendar</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="pages/apps/todo.html">Todo List</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="pages/apps/gallery.html">Gallery</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                        </ul>
+                    </div>
+                </nav>
+                }
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+        <!-- partial -->
+        <!-- partial:partials/_profile-sidebar.html -->
+        <div class="profile-sidebar" id="profile-sidebar">
+            <i class="profile-settings-close mdi mdi-close"></i>
+            <div class="profile-sidebar-header">
+                <div class="text-center">
+                    <div>
+                        <div class="profile-sidebar-thumb">
+                            <img src=@me.AvatarPath alt="profile">
+                        </div>
+                        <div class="profile-sidebar-info">
+                            <h4 class="name">
+                                @me.DisplayName
+                            </h4>
+                            <h5 class="mb-0 designation">@role</h5>
+                        </div>
+                    </div>
+                    @*<div class="profile-social-icons">
+                            <a href="#"><i class="mdi mdi-facebook-box"></i></a>
+                            <a href="#"><i class="mdi mdi-twitter-box"></i></a>
+                            <a href="#"><i class="mdi mdi-instagram"></i></a>
+                            <a href="#"><i class="mdi mdi-google-plus-box"></i></a>
+                        </div>*@
+                </div>
+            </div>
+            <div class="profile-sidebar-body">
+                <ul class="list-profile-items">
+                    <li class="profile-item">
+                        <a href="#" class="profile-sidebar-link">
+                            <div class="d-flex align-items-center">
+                                <i class="mdi mdi-account-outline text-primary"></i>
+                                <div>
+                                    <h5 class="item-title">My Profile</h5>
+                                    <p class="item-detail">Account settings and more</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="profile-item">
+                        <a href="#" class="profile-sidebar-link">
+                            <div class="d-flex align-items-center">
+                                <i class="mdi mdi-email-outline text-info"></i>
+                                <div>
+                                    <h5 class="item-title">My Messages</h5>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="profile-item">
+                        <a href="#" class="profile-sidebar-link">
+                            <div class="d-flex align-items-center">
+                                <i class="mdi mdi-bell text-danger"></i>
+                                <div>
+                                    <h5 class="item-title">My Notifications</h5>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
                 </ul>
-                @Html.Partial("_LoginPartial")
             </div>
         </div>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    @RenderBody()
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer">
+                    <div class="footer-wrap">
+                        <div class="w-100 clearfix">
+                            <span class="d-block text-center text-sm-left d-sm-inline-block">Copyright © 2019 <a href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash</a>. All rights reserved. Modified by <a href="https://xabv.net/">Xabv</a></span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <!-- container-scroller -->
+    <!-- base:js -->
+    <script src="~/Scripts/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="~/Scripts/off-canvas.js"></script>
+    <script src="~/Scripts/hoverable-collapse.js"></script>
+    <script src="~/Scripts/template.js"></script>
+    <script src="~/Scripts/settings.js"></script>
+    <script src="~/Scripts/todolist.js"></script>
+    <script src="~/Scripts/profile-settings.js"></script>
+    <!-- endinject -->
+    <script src="~/Scripts/vendors/sweetalert/sweetalert.min.js"></script>
+    <script src="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.js"></script>
+    <script src="~/Scripts/vendors/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/Scripts/vendors/inputmask/jquery.inputmask.bundle.js"></script>
+    <script src="~/Scripts/vendors/inputmask/inputmask.binding.js"></script>
+    <script src="~/Scripts/vendors/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/Scripts/vendors/chart.js/Chart.min.js"></script>
+    <script src="~/Scripts/vendors/progressbar.js/progressbar.min.js"></script>
+    <script src="~/Scripts/vendors/chartjs-plugin-datalabels/chartjs-plugin-datalabels.js"></script>
+    <script src="~/Scripts/vendors/justgage/justgage.js"></script>
+    <script src="~/Scripts/vendors/justgage/raphael-2.1.4.min.js"></script>
+    <script src="~/Scripts/vendors/datatables.net/jquery.dataTables.js"></script>
+    <script src="~/Scripts/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+    <!-- Custom js for this page-->
+    <script src="~/Scripts/todolist.js"></script>
+    <script src="~/Scripts/dashboard.js"></script>
+    <script src="~/Scripts/My Custom/HouseholdWizard.js"></script>
+    <script src="~/Scripts/My Custom/HomeIndex.js"></script>
+    <script>
+        function logout() {
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+    <!-- End custom js for this page-->
     @RenderSection("scripts", required: false)
 </body>
 </html>

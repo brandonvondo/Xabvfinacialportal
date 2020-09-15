@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Xabvfinacialportal.Enums;
+using Xabvfinacialportal.Extensions;
 
 namespace Xabvfinacialportal.Models
 {
@@ -13,7 +14,8 @@ namespace Xabvfinacialportal.Models
         public int Id { get; set; }
 
         // Parents
-        public int HouseholdId { get; set; }
+        public int? HouseholdId { get; set; }
+        [Required]
         public string UserId { get; set; }
         public virtual Household Household { get; set; }
         public virtual ApplicationUser User { get; set; }
@@ -48,6 +50,7 @@ namespace Xabvfinacialportal.Models
             UserId = HttpContext.Current.User.Identity.GetUserId();
             CreatedString = DateTime.Now.ToString();
             AccountName = accountName;
+            HouseholdId = (int)HttpContext.Current.User.Identity.GetHouseholdId();
             
         }
 

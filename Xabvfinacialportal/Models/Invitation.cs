@@ -24,6 +24,14 @@ namespace Xabvfinacialportal.Models
         public Guid Code { get; set; }
 
         // Constructor
+        public Invitation(int hhId)
+        {
+            HouseholdId = hhId;
+            Created = DateTime.Now;
+            IsValid = true;
+            TTL = 7;
+        }
+
         public Invitation()
         {
             Created = DateTime.Now;
