@@ -1,0 +1,289 @@
+﻿@using Xabvfinacialportal.Models;
+@using Xabvfinacialportal.Helpers;
+@model ApplicationUser
+@{
+    UserHelper userHelper = new UserHelper();
+    StringHelper stringHelper = new StringHelper();
+    bool myPage = false;
+    var budgetList = Model.Budgets.Where(b => b.UserId == Model.Id).ToList();
+    var itemCount = 0;
+    var displayString = stringHelper.noid(Model.DisplayName);
+    var displayId = stringHelper.idOnly(Model.DisplayName);
+    if (budgetList != null)
+    {
+        foreach (var budget in budgetList)
+        {
+            itemCount = itemCount + budget.Items.Count;
+        }
+    }
+    if (userHelper.GetUserId() == Model.Id)
+    {
+        myPage = true;
+
+    }
+}
+<style>
+    .content-wrapper {
+        min-height: unset !important;
+    }
+
+    .input-sm {
+        color: white !important;
+    }
+
+    .xdt {
+        color: white !important;
+        font-weight: bold;
+    }
+
+    .swal-text {
+        font-size: 40px;
+    }
+</style>
+
+@if (myPage)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        let id = '1';
+            let pUrl = '@Url.Action("ProfilePost","Home")';
+            let eUrl = '@Url.Action("EmailPost","Home")';
+        $('.editfields').editable({
+
+        pk: id,
+        type: 'text',
+        url: pUrl,
+        validate: function (value) {
+            if ($.trim(value) === '') return ' This field is required';
+        },
+        success: function (response, newValue) {
+            swal(response, newValue);
+            }
+    });
+
+        $('#email').editable({
+
+        pk: id,
+        type: 'text',
+        url: eUrl,
+        validate: function (value) {
+        if (ValidateEmail(value)) return ' Please enter a valid email';
+            },
+        success: function (response, newValue) {
+            swal(response, newValue);
+            }
+    });
+            $('#displayname').editable({
+
+        pk: id,
+        type: 'text',
+        url: pUrl,
+        validate: function (value) {
+        if (isLetter(value)) return ' Letters only please';
+            },
+        success: function (response, newValue) {
+            swal(response, newValue);
+            }
+    });
+
+    function ValidateEmail(address) {
+        try {
+            address = new MailAddress(address).Address;
+        } catch (FormatException) {
+            return (false)
+        }
+        return (true)
+            }
+
+
+        function isLetter(name) {
+            return name.matches("[a-zA-Z]+");
+            }
+
+            jQuery.ajaxSetup({
+            beforeSend: function () {
+                $('.dot-opacity-loader').show();
+            },
+            complete: function () {
+                $('.dot-opacity-loader').hide();
+            },
+            success: function () { }
+        });
+        var nUrl = '@Url.Action("NotifLoader")';
+            $.ajax({
+                url: nUrl,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html'
+            })
+                .then(function successCallback(response) {
+                    $('#notifAjax').html(response);
+                }, function errorCallback(reponse) {
+                        alert(reponse);
+                });
+        });
+    </script>
+    switch (ViewBag.Shown)
+    {
+        case "Notifications":
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('a[href="#notif"]').tab('show');
+                });
+            </script>
+            break;
+        default:
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('a[href="#bankaccount"]').tab('show');
+                });
+            </script>
+            break;
+    }
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body page-card">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="border-bottom text-center pb-4">
+                            <img src=@Model.AvatarPath alt="profile" class="img-lg rounded-circle mb-3" />
+                            <div class="mb-3">
+                                @if (myPage)
+                                {
+                                    <a href="#" id="displayname" class="xdt" data-title="Enter Displayname">@displayString</a> <span>@displayId</span>
+                                }
+                                else
+                                {
+                                    <h3>@Model.DisplayName</h3>
+                                }
+                            </div>
+                        </div>
+                        <div class="py-4">
+                            <div class="row">
+                                <div class="col-6">
+                                    Name
+                                </div>
+                                <div class="col-6 text-muted">
+                                    @if (myPage)
+                                    {
+                                        <div class="row">
+                                            <div class="col-6"><a href="#" id="firstname" class="editfields xdt" data-title="Enter First Name">@Model.FirstName</a></div>
+                                            <div class="col-6"><a href="#" id="lastname" class="editfields xdt" data-title="Enter Last Name">@Model.LastName</a></div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row">
+                                            @Model.FullName
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <span class="col-6">
+                                    Email
+                                </span>
+                                <span class="col-6 text-muted">
+                                    @if (myPage)
+                                    {
+                                        <a href="#" id="email" class="xdt" data-title="Enter New Email">@Model.Email</a>
+                                    }
+                                    else
+                                    {
+                                        @Model.Email
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 border-left-lg">
+                        <h1 class="card-description">Stats</h1>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#bankaccount" role="tab" aria-controls="#bankaccount" aria-selected="true">Bank Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#budget" role="tab" aria-controls="budget" aria-selected="false">Budgeting</a>
+                            </li>
+                            @if (myPage)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#notif" role="tab" aria-controls="notif" aria-selected="false">Notifications</a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="bankaccount" role="tabpanel" aria-labelledby="bankaccount-tab">
+                                <div class="row">
+                                    <div class="col-5 offset-1">
+                                        <div class="card card-inverse-primary card-outline-primary">
+                                            <div class="card-header">
+                                                <h4 class="card-title text-center">Accounts Created:</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <h2 class="text-center">@Model.Accounts.Where(a => a.UserId == Model.Id).Count()</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 offset-1">
+                                        <div class="card card-inverse-primary card-outline-primary">
+                                            <div class="card-header">
+                                                <h4 class="card-title text-center">Transactions:</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <h2 class="text-center">@Model.Transactions.Where(t => t.UserId == Model.Id).Count()</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="budget" role="tabpanel" aria-labelledby="budget-tab">
+                                <div class="row">
+                                    <div class="col-5 offset-1">
+                                        <div class="card card-inverse-success card-outline-success">
+                                            <div class="card-header">
+                                                <h4 class="card-title text-center">Budgets created:</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <h2 class="text-center">@Model.Budgets.Where(b => b.UserId == Model.Id).Count()</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 offset-1">
+                                        <div class="card card-inverse-success card-outline-success">
+                                            <div class="card-header">
+                                                <h4 class="card-title text-center">Budget Items:</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <h2 class="text-center">@itemCount</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (myPage)
+                            {
+                                <div class="tab-pane fade" id="notif" role="tabpanel" aria-labelledby="notif-tab">
+                                    <div class="dot-opacity-loader">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    <div id="notifAjax">
+
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

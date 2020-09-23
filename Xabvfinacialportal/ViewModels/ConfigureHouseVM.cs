@@ -9,12 +9,27 @@ namespace Xabvfinacialportal.ViewModels
 {
     public class ConfigureHouseVM
     {
-        public int? HouseholdId { get; set; }
+        public ICollection<BankAccountVM> BankAccounts { get; set; }
+        public ICollection<BudgetVM> Budgets { get; set; }
+    }
+
+    public class BankAccountVM
+    {
+        public string Name { get; set; }
+        public int Type { get; set; }
         public decimal StartingBalance { get; set; }
         public decimal WarningBalance { get; set; }
-        public string AccountName { get; set; }
-        public AccountType AccountType { get; set; }
-        public Budget Budget { get; set; }
-        public BudgetItem BudgetItem { get; set; }
+    }
+
+    public class BudgetVM
+    {
+        public string Name { get; set; }
+        public ICollection<ItemVM> Items { get; set; }
+    }
+
+    public class ItemVM
+    {
+        public string Name { get; set; }
+        public decimal TargetValue { get; set; }
     }
 }

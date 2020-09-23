@@ -27,8 +27,9 @@
 }
 
 .wizardcard-context {
+    height: fit-content;
     width: 80%;
-    margin-top: 25px;
+    margin-bottom: 25px;
 }
 .wizard > .content {
     height: 55vh !important;
@@ -216,4 +217,37 @@ float: right;
 #membertable {
     max-height:400px;
     overflow-y:auto;
+}
+
+.budget-card h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    margin-bottom: 30px !important;
+    margin-top: 10px !important;
+}
+
+    .budget-card .card-header {
+        color: #0ACF97 !important;
+    }
+
+.budget-card .card-body {
+        color: white !important;
+}
+
+.page-card {
+    height: 69vh;
+    overflow-y: auto;
+}
+
+.bamenu {
+    background-color: #6C50F3 !important;
+    outline: 1px solid #402F91 !important;
+}
+
+.accback {
+    color: white !important;
+    background-color: #6C50F3 !important;
+}
+
+.accback:hover {
+    color: silver !important;
+    background-color: #6C50F3 !important;
 }

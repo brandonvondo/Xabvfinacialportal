@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using Xabvfinacialportal.Extensions;
 
 namespace Xabvfinacialportal.Models
 {
@@ -58,11 +59,21 @@ namespace Xabvfinacialportal.Models
         public virtual ICollection<BudgetItem> Items { get; set; }
 
         // Constructor
+        public Budget(string name)
+        {
+            BudgetName = name;
+            Items = new HashSet<BudgetItem>();
+            Created = DateTime.Now;
+            UserId = HttpContext.Current.User.Identity.GetUserId();
+            HouseHoldId = (int)HttpContext.Current.User.Identity.GetHouseholdId();
+        }
+
         public Budget()
         {
             Items = new HashSet<BudgetItem>();
             Created = DateTime.Now;
             UserId = HttpContext.Current.User.Identity.GetUserId();
+            HouseHoldId = (int)HttpContext.Current.User.Identity.GetHouseholdId();
         }
     }
 }

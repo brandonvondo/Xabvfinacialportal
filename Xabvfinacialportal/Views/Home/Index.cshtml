@@ -3,6 +3,8 @@
 @{
     HouseholdHelper householdHelper = new HouseholdHelper();
     RoleHelper roleHelper = new RoleHelper();
+    UserHelper userHelper = new UserHelper();
+    var currentUser = userHelper.GetUser();
 }
 @if (User.IsInRole("New User") || User.Identity.GetHouseholdId() == 0)
 {
@@ -60,7 +62,7 @@ else
         <h1 class="text-center onehPnt">@household.HouseholdName Dashboard</h1>
     </div>
     <div class="row">
-        <div class="col-8">
+        <div class="col-md-8 col-sm-12">
             <ul class="nav nav-pills nav-pills-success no-bullets" id="pills-tab" role="tablist">
                 <li class="nav-item" id="budget">
                     <a class="nav-link active" id="pills-budget-tab" data-toggle="pill" href="#pills-budget" role="tab" aria-controls="pills-budget" aria-selected="true">Household Budgets</a>
@@ -75,7 +77,7 @@ else
                     {
                         foreach (var budget in household.Budgets.ToList())
                         {
-                            <div class="card card-inverse-primary">
+                            <div class="card card-inverse-primary budget-card">
                                 <div class="card-header">
                                     <div class="row">
                                         <div class="col-6 text-center">
@@ -102,12 +104,13 @@ else
                                                 {
                                                     foreach (var item in budget.Items.ToList())
                                                     {
-                                                        <li>
+                                                        <li class="no-bullets">
                                                             <div class="row">
                                                                 <div class="col-12 text-center">
                                                                     <h3>Budget Item: '@item.ItemName'</h3>
                                                                 </div>
                                                             </div>
+                                                            <hr />
                                                             <div class="row">
                                                                 <div class="col-6 text-center">
                                                                     <h5>Target Amount: @budget.TargetAmount</h5>
@@ -163,24 +166,41 @@ else
                                     {
                                         foreach (var account in household.BankAccounts.ToList())
                                         {
+                                            if (account.UserId == currentUser.Id)
+                                            {
 
-                                            <tr>
-                                                <td>@account.AccountName</td>
-                                                <td>@account.User.FullName</td>
-                                                <td>$@account.CurrentBalance</td>
-                                                <td>
-                                                    <button class="btn btn-outline-primary">View</button>
-                                                </td>
-                                            </tr>
+                                                <tr>
+                                                    <td>@account.AccountName</td>
+                                                    <td>@account.User.FullName (Me)</td>
+                                                    <td>$@account.CurrentBalance</td>
+                                                    <td>
+                                                        <button name=@account.Id class="btn btn-outline-primary">Withdraw</button>
+                                                        <button name=@account.Id class="btn btn-outline-primary">Deposit</button>
+                                                        <button name=@account.Id class="btn btn-outline-primary">View</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td>@account.AccountName</td>
+                                                    <td>@account.User.FullName</td>
+                                                    <td>$@account.CurrentBalance</td>
+                                                    <td>
+                                                        <button name=@account.Id class="btn btn-outline-primary">Transfer</button>
+                                                        <button name=@account.Id class="btn btn-outline-primary">View</button>
+                                                    </td>
+                                                </tr>
+                                            }
                                         }
                                     }
                                     else
                                     {
                                         <tr>
-                                            <td>Name Here</td>
-                                            <td>Owner Here</td>
-                                            <td>Balance Here</td>
-                                            <td>Add an Account to get started</td>
+                                            <td>Empty Table</td>
+                                            <td>No Accounts</td>
+                                            <td>Add an Account</td>
+                                            <td>To get started</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -190,7 +210,7 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-4 side-col">
+        <div class="col-md-4 side-col col-sm-12">
             @if (User.IsInRole("Head"))
             {
                 <div class="row">
@@ -227,15 +247,14 @@ else
                                             @if (head.Accounts.ToList().Count > 0)
                                             {
                                                 var id = "dropdownAccounts" + $"{head.DisplayName}";
-                                                <div class="dropdown">
-                                                    <button class="btn btn-primary dropdown-toggle" type="button" id=@id data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="mdi mdi-bank"></i>
+                                                <div class="dropup">
+                                                    <button class="btn btn-primary dropdown-toggle" data-flip="false" type="button" id=@id data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                         Accs <i class="mdi mdi-bank"></i>
                                                     </button>
-                                                    <div class="dropdown-menu" aria-labelledby=@id>
-                                                        <h6 class="dropdown-header">Accounts</h6>
+                                                    <div class="dropdown-menu bamenu" aria-labelledby=@id>
                                                         @foreach (var account in head.Accounts.ToList())
                                                         {
-                                                            <a class="dropdown-item" href=@Url.Action("Details","BankAccount", new { id = account.Id })>@account.AccountName</a>
+                                                            <a class="dropdown-item accback" href=@Url.Action("Details","BankAccount", new { id = account.Id })>@account.AccountName</a>
                                                         }
                                                     </div>
                                                 </div>

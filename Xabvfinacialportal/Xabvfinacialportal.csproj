@@ -192,6 +192,7 @@
     <Compile Include="Helpers\RandomGeneration.cs" />
     <Compile Include="Helpers\RoleHelper.cs" />
     <Compile Include="Helpers\SlugMaker.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -208,6 +209,8 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ConfigureHouseVM.cs" />
     <Compile Include="ViewModels\CreateHouseholdVM.cs" />
+    <Compile Include="ViewModels\TransactionModalVM.cs" />
+    <Compile Include="ViewModels\xEditableVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="android-chrome-192x192.png" />
@@ -443,6 +446,7 @@
     <Content Include="Scripts\modal-demo.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\morris.js" />
+    <Content Include="Scripts\My Custom\EmailValidate.js" />
     <Content Include="Scripts\My Custom\HomeIndex.js" />
     <Content Include="Scripts\My Custom\HouseholdWizard.js" />
     <Content Include="Scripts\no-ui-slider.js" />
@@ -1922,6 +1926,10 @@
     <Content Include="Scripts\vendors\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\vendors\jquery-ui-1.12.1\package.json" />
     <Content Include="site.webmanifest" />
+    <Content Include="Views\Transactions\TransactionModal.cshtml" />
+    <Content Include="Views\Home\UserProfile.cshtml" />
+    <Content Include="Views\Home\error.cshtml" />
+    <Content Include="Views\Home\_NotifLoader.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

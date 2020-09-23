@@ -32,6 +32,15 @@ namespace Xabvfinacialportal.Models
                 return $"{FirstName} {LastName}";
             }
         }
+        [NotMapped]
+        public string myId
+        {
+            get
+            {
+                var myString = DisplayName;
+                return myString.Substring(myString.Length - 5);
+            }
+        }
         public virtual ICollection<Budget> Budgets { get; set; }
         public virtual ICollection<Notification>  Notifications  { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }

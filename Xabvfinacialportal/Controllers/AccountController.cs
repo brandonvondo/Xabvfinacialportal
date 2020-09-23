@@ -346,7 +346,25 @@ namespace Xabvfinacialportal.Controllers
 
                  string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                try
+                {
+                    var from = "Xabvdget<example@email.com>";
+                    var email = new MailMessage(from, model.Email)
+                    {
+                        Subject = "Reset your password",
+                        Body = "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>",
+                        IsBodyHtml = true
+                    };
+
+                    var svc = new EmailService();
+                    await svc.SendAsync(email);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    await Task.FromResult(0);
+                }
 
                 TempData["Message"] = "Check your email for further instruction!";
                 return RedirectToAction("Login", "Account");
@@ -374,13 +392,14 @@ namespace Xabvfinacialportal.Controllers
             {
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+
                 try
                 {
-                    var from = "XabugTracker<example@email.com>";
+                    var from = "Xabvdget<example@email.com>";
                     var email = new MailMessage(from, model.Email)
                     {
-                        Subject = "Confirm your account",
-                        Body = "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>",
+                        Subject = "Email Confirmation",
+                        Body = "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>",
                         IsBodyHtml = true
                     };
 

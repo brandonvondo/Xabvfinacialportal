@@ -1,0 +1,37 @@
+﻿
+<div class="container">
+    @if (ViewBag.Notifs == null)
+    {
+    <div class="row">
+        <h1>There are no notifications found.</h1>
+    </div>
+    }
+    else
+    {
+        foreach (var notif in ViewBag.Notifs)
+        {
+            if (notif.IsRead)
+            {
+                <div class="row readrow notifrow">
+                    <div class="col-6">
+                        <h3>@notif.Subject</h3>
+                    </div>
+                    <div class="col-6">
+                        <h3>@notif.CreatedString</h3>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row notreadrow notifrow">
+                    <div class="col-6">
+                        <h3>@notif.Subject</h3>
+                    </div>
+                    <div class="col-6">
+                        <h3>@notif.CreatedString</h3>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>

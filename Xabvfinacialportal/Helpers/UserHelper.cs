@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Xabvfinacialportal.Helpers
 
@@ -11,6 +12,24 @@ namespace Xabvfinacialportal.Helpers
     public class UserHelper
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+
+        public void ChangeLastName(string lastName)
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            var user = db.Users.Find(userId);
+            user.LastName = lastName;
+            db.SaveChanges();
+        }
+
+        public void ChangeFirstName(string firstName)
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            var user = db.Users.Find(userId);
+            user.FirstName = firstName;
+            db.SaveChanges();
+        }
 
         public string GetAvatarPath()
         {
@@ -37,6 +56,13 @@ namespace Xabvfinacialportal.Helpers
             var user = db.Users.Find(userId);
             return user;
         }
+
+        public ApplicationUser GetUserByDisplayName(string displayName)
+        {
+            var user = db.Users.Where(u => u.DisplayName == displayName).FirstOrDefault();
+            return user;
+        }
+
         public string GetFullName()
         {
             var userId = HttpContext.Current.User.Identity.GetUserId();

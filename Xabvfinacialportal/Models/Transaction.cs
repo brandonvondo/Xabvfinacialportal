@@ -34,6 +34,7 @@ namespace Xabvfinacialportal.Models
         {
             Created = DateTime.Now;
             UserId = HttpContext.Current.User.Identity.GetUserId();
+            IsDeleted = false;
         }
 
 

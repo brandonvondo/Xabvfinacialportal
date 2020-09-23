@@ -69,6 +69,10 @@
         input {
             color: white !important;
         }
+
+        select {
+            color: white !important;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +129,16 @@
                                                                         <input id="bankAccount1name" onkeyup="nameUpdate(this.id)" class="form-control accname required" placeholder="Sample Account Name" value="My First Account">
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-4 offset-2">
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <label>Account Type</label>
+                                                                        <select class="form-control" data-val="true" data-val-required="The Account Type field is required." id="bankAccount1type" name="AccountType">
+                                                                            <option selected="selected" value="0">Checking</option>
+                                                                            <option value="1">Savings</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-4">
                                                                     <div class="card-title">
                                                                         <h6>Suggested Warning Balance Amounts:</h6>
                                                                     </div>
@@ -141,13 +154,13 @@
                                                                 <div class="col-4">
                                                                     <div class="form-group">
                                                                         <label>Starting Balance</label>
-                                                                        <input id="bankAccount1startbal" class="form-control required" data-inputmask="'alias': 'currency'" />
+                                                                        <input id="bankAccount1startbal" name="bankAccount1" onkeyup="babalUpdate(this.name)" class="form-control required" data-inputmask="'alias': 'currency'" value="1"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-4 offset-2">
                                                                     <div class="form-group">
                                                                         <label>Warning Balance</label>
-                                                                        <input id="bankAccount1warningbal" class="form-control required" data-inputmask="'alias': 'currency'" />
+                                                                        <input id="bankAccount1warningbal" name="bankAccount1" onkeyup="babalUpdate(this.name)" class="form-control required" data-inputmask="'alias': 'currency'" value="0"/>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -183,7 +196,7 @@
                                                             </div>
                                                             <div class="col-8 text-center">
                                                                 <p class="budgetNamecontainer">Budget:</p> <br />
-                                                                <a href="#" id="budget1name" name="budget1" onchange="binameUpdate(this.name)" data-type="text" class="budgetName budgetNamecontainer">My First Budget</a>
+                                                                <a href="#" id="budget1name" name="budget1" data-type="text" class="budgetName budgetNamecontainer">My First Budget</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -196,49 +209,36 @@
                                             <div id="bitabs">
                                                 <ul class="nav nav-pills nav-pills-success no-bullets" id="pills-tab" role="tablist">
                                                     <li class="nav-item" id="budget1list">
-                                                        <a class="nav-link active" id="pills-budget1itemc-tab" data-toggle="pill" href="#pills-budget1itemc" role="tab" aria-controls="pills-budget1itemc" aria-selected="true">My First Budget</a>
+                                                        <a class="nav-link active" id="pills-budget1-tab" data-toggle="pill" href="#pills-budget1" role="tab" aria-controls="pills-budget1" aria-selected="true">My First Budget</a>
                                                     </li>
                                                 </ul>
                                                 <div class="tab-content" id="pills-tabContent">
-                                                    <div class="tab-pane fade show active" id="pills-budget1itemc" role="tabpanel" aria-labelledby="pills-budget1itemc-tab">
+                                                    <div class="tab-pane fade show active" id="pills-budget1" role="tabpanel" aria-labelledby="pills-budget1-tab">
 
                                                         <div class="bahead mb-2">
                                                             <div class="row">
-                                                                <div class="col-3">
-                                                                    <h2>Budget Item Creation <button onclick="biCreate(this.name)" name="budget1itemContainer" data-budget="budget1itemc" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="right" title="Add an Additional Item" data-custom-class="tooltip-primary"><i class="mdi mdi-plus"></i></button></h2>
-                                                                </div>
-                                                                <div class="col-9">
-                                                                    <div class="row">
-                                                                        <div class="col-6">
-                                                                            <h3 class="text-right">
-                                                                                Budget Total: <input id="budget1itemctotal" class="budgettotal text-center" data-inputmask="'alias': 'currency'" readonly />
-                                                                            </h3>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <h4 class="text-right" id="budget1itemCount">Budget Items being created: 1</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                <h2>Budget Item Creation <button onclick="biCreate(this.name, 'budget1')" name="#budget1itemContainer" type="button" class="btn btn-rounded btn-primary btn-icon itemAdd" data-toggle="tooltip" data-placement="right" title="Add an Additional Item" data-custom-class="tooltip-primary"><i class="mdi mdi-plus"></i></button></h2>
+
                                                             </div>
                                                         </div>
 
                                                         <div id="budget1itemContainer">
-                                                            <div id="budget1itemc1card" name="budget1item" class="card card-inverse-success wizardcard-context">
+                                                            <div id="item1card" name="item1" class="card card-inverse-success wizardcard-context">
                                                                 <div class="card-header bihead mt-1">
                                                                     <div class="row">
                                                                         <div class="col-1">
-                                                                            <button id="budgetInfo" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="top" title="A budget item is a category within a budget e.g. budget 'Household Expenses' with budget item 'Food'" data-custom-class="tooltip-primary"><i class=" mdi mdi-information-variant"></i></button>
+                                                                            <button id="itemInfo" type="button" class="btn btn-rounded btn-primary btn-icon" data-toggle="tooltip" data-placement="top" title="A budget item is a category within a budget e.g. budget 'Household Expenses' with budget item 'Food'" data-custom-class="tooltip-primary"><i class=" mdi mdi-information-variant"></i></button>
                                                                         </div>
                                                                         <div class="col-3">
                                                                             <div class="card-title batitle text-right">
-                                                                                <a href="#" id="budget1item1name" onchange="binameUpdate(this.id)" data-type="text" class="budgetName budgetNamecontainer">Sample Item</a>
+                                                                                <a href="#" data-type="text" id="item1name" class="budgetName budgetNamecontainer">Sample Item</a>
                                                                             </div>
                                                                         </div>
                                                                         <div class="offset-1 col-3">
                                                                             Target Amount:
                                                                         </div>
                                                                         <div class="col-4">
-                                                                            <input id="budget1item1target" class="budgetitemtotal text-center" data-inputmask="'alias': 'currency'" />
+                                                                            <input id="item1target" class="budgetitemtotal text-center" data-inputmask="'alias': 'currency'" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -252,13 +252,14 @@
 
                                         <h3>Review & Finish</h3>
                                         <section>
-                                            <h3>Finish</h3>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input class="checkbox" type="checkbox">
-                                                    I agree with the Terms and Conditions.
-                                                </label>
-                                            </div>
+                                            <h1>Finish Up Creation</h1>
+                                            <br />
+                                            <h3>Bank Accounts being created: <span id="bankCountSpan">0</span></h3>
+                                            <hr />
+                                            <h3>Budgets being created: <span id="budgetCountSpan">0</span></h3>
+                                            <hr />
+                                            <h3>Budget Items being created: <span id="budgetitemCountSpan">0</span></h3>
+                                            <hr />
                                         </section>
                                     </div>
                                 </form>
@@ -284,6 +285,7 @@
     <script src="~/Scripts/todolist.js"></script>
     <script src="~/Scripts/profile-settings.js"></script>
     <!-- endinject -->
+    <script src="~/Scripts/vendors/sweetalert/sweetalert.min.js"></script>
     <script src="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.js"></script>
     <script src="~/Scripts/vendors/jquery-steps/jquery.steps.min.js"></script>
     <script src="~/Scripts/vendors/inputmask/jquery.inputmask.bundle.js"></script>

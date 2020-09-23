@@ -22,6 +22,7 @@
     <link href="~/Content/css/vendor.bundle.base.css" rel="stylesheet" />
     <link href="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.css" rel="stylesheet" />
     <link href="~/Scripts/vendors/datatables.net-bs4/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/Scripts/vendors/x-editable/bootstrap-editable.css" rel="stylesheet" />
     <!-- endinject -->
     <!-- plugin css for this page -->
     <!-- End plugin css for this page -->
@@ -31,6 +32,42 @@
     <!-- endinject -->
 </head>
 <body>
+    <!-- base:js -->
+    <script src="~/Scripts/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="~/Scripts/off-canvas.js"></script>
+    <script src="~/Scripts/hoverable-collapse.js"></script>
+    <script src="~/Scripts/template.js"></script>
+    <script src="~/Scripts/settings.js"></script>
+    <script src="~/Scripts/todolist.js"></script>
+    <script src="~/Scripts/profile-settings.js"></script>
+    <!-- endinject -->
+    <script src="~/Scripts/vendors/sweetalert/sweetalert.min.js"></script>
+    <script src="~/Scripts/vendors/x-editable/bootstrap-editable.min.js"></script>
+    <script src="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.js"></script>
+    <script src="~/Scripts/vendors/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/Scripts/vendors/inputmask/jquery.inputmask.bundle.js"></script>
+    <script src="~/Scripts/vendors/inputmask/inputmask.binding.js"></script>
+    <script src="~/Scripts/vendors/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/Scripts/vendors/chart.js/Chart.min.js"></script>
+    <script src="~/Scripts/vendors/progressbar.js/progressbar.min.js"></script>
+    <script src="~/Scripts/vendors/chartjs-plugin-datalabels/chartjs-plugin-datalabels.js"></script>
+    <script src="~/Scripts/vendors/justgage/justgage.js"></script>
+    <script src="~/Scripts/vendors/justgage/raphael-2.1.4.min.js"></script>
+    <script src="~/Scripts/vendors/datatables.net/jquery.dataTables.js"></script>
+    <script src="~/Scripts/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+    <!-- Custom js for this page-->
+    <script src="~/Scripts/My Custom/HouseholdWizard.js"></script>
+    <script src="~/Scripts/My Custom/HomeIndex.js"></script>
+    <script>
+        function logout() {
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+    <!-- End custom js for this page-->
+    @RenderSection("scripts", required: false)
     <div class="container-scroller">
         <!-- partial:partials/_horizontal-navbar.html -->
         <div class="horizontal-menu">
@@ -132,6 +169,30 @@
             </nav>
             @if (User.Identity.GetHouseholdId() != 0)
             {
+                <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title">Transaction Create</h2>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-content">
+                                <div class="dot-opacity-loader">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success">Submit</button>
+                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <nav class="bottom-navbar">
                     <div class="container">
                         <ul class="nav page-navigation">
@@ -141,45 +202,44 @@
                                     <span class="menu-title">Dashboard</span>
                                 </a>
                             </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href=@Url.Action("WhatsNew","Household")>
-                                        <i class="mdi mdi-fire menu-icon"></i>
-                                        <span class="menu-title">What's new?</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class=" mdi mdi-bank menu-icon"></i>
-                                        <span class="menu-title">Bank Accounts</span>
-                                        <i class="menu-arrow"></i>
-                                    </a>
-                                    <div class="submenu">
-                                        <ul class="submenu-item">
-                                            <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">My Accounts</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="pages/forms/advanced_elements.html">Household Accounts</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class=" mdi mdi-format-list-bulleted menu-icon"></i>
-                                        <span class="menu-title">Transactions</span>
-                                        <i class="menu-arrow"></i>
-                                    </a>
-                                    <div class="submenu">
-                                        <ul class="submenu-item">
-                                            <li class="nav-item"><a class="nav-link" href="pages/apps/email.html">Email</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="pages/apps/calendar.html">Calendar</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="pages/apps/todo.html">Todo List</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="pages/apps/gallery.html">Gallery</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href=@Url.Action("WhatsNew","Household")>
+                                    <i class="mdi mdi-fire menu-icon"></i>
+                                    <span class="menu-title">What's new?</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class=" mdi mdi-bank menu-icon"></i>
+                                    <span class="menu-title">Bank Accounts</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="submenu">
+                                    <ul class="submenu-item">
+                                        <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">My Accounts</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="pages/forms/advanced_elements.html">Household Accounts</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class=" mdi mdi-format-list-bulleted menu-icon"></i>
+                                    <span class="menu-title">Transactions</span>
+                                    <i class="menu-arrow"></i>
+                                </a>
+                                <div class="submenu">
+                                    <ul class="submenu-item">
+                                        <li class="nav-item"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Withdraw<i class="mdi mdi-play-circle ml-1"></i></button></li>
+                                        <li class="nav-item"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Desposit<i class="mdi mdi-play-circle ml-1"></i></button></li>
+                                        <li class="nav-item"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Transfer<i class="mdi mdi-play-circle ml-1"></i></button></li>
+                                    </ul>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </nav>
-                }
-            </div>
+            }
+        </div>
         <!-- partial -->
         <!-- partial:partials/_profile-sidebar.html -->
         <div class="profile-sidebar" id="profile-sidebar">
@@ -208,7 +268,7 @@
             <div class="profile-sidebar-body">
                 <ul class="list-profile-items">
                     <li class="profile-item">
-                        <a href="#" class="profile-sidebar-link">
+                        <a href=@Url.Action("UserProfile", new { displayname = me.DisplayName })  class="profile-sidebar-link">
                             <div class="d-flex align-items-center">
                                 <i class="mdi mdi-account-outline text-primary"></i>
                                 <div>
@@ -218,7 +278,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="profile-item">
+                    @*<li class="profile-item">
                         <a href="#" class="profile-sidebar-link">
                             <div class="d-flex align-items-center">
                                 <i class="mdi mdi-email-outline text-info"></i>
@@ -227,9 +287,9 @@
                                 </div>
                             </div>
                         </a>
-                    </li>
+                    </li>*@
                     <li class="profile-item">
-                        <a href="#" class="profile-sidebar-link">
+                        <a href=@Url.Action("UserProfile", new { displayname = me.DisplayName, section = "Notifications" }) class="profile-sidebar-link">
                             <div class="d-flex align-items-center">
                                 <i class="mdi mdi-bell text-danger"></i>
                                 <div>
@@ -263,42 +323,5 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
-    <!-- base:js -->
-    <script src="~/Scripts/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- End plugin js for this page-->
-    <!-- inject:js -->
-    <script src="~/Scripts/off-canvas.js"></script>
-    <script src="~/Scripts/hoverable-collapse.js"></script>
-    <script src="~/Scripts/template.js"></script>
-    <script src="~/Scripts/settings.js"></script>
-    <script src="~/Scripts/todolist.js"></script>
-    <script src="~/Scripts/profile-settings.js"></script>
-    <!-- endinject -->
-    <script src="~/Scripts/vendors/sweetalert/sweetalert.min.js"></script>
-    <script src="~/Scripts/vendors/jquery-contextmenu/jquery.contextMenu.min.js"></script>
-    <script src="~/Scripts/vendors/jquery-steps/jquery.steps.min.js"></script>
-    <script src="~/Scripts/vendors/inputmask/jquery.inputmask.bundle.js"></script>
-    <script src="~/Scripts/vendors/inputmask/inputmask.binding.js"></script>
-    <script src="~/Scripts/vendors/jquery-validation/jquery.validate.min.js"></script>
-    <script src="~/Scripts/vendors/chart.js/Chart.min.js"></script>
-    <script src="~/Scripts/vendors/progressbar.js/progressbar.min.js"></script>
-    <script src="~/Scripts/vendors/chartjs-plugin-datalabels/chartjs-plugin-datalabels.js"></script>
-    <script src="~/Scripts/vendors/justgage/justgage.js"></script>
-    <script src="~/Scripts/vendors/justgage/raphael-2.1.4.min.js"></script>
-    <script src="~/Scripts/vendors/datatables.net/jquery.dataTables.js"></script>
-    <script src="~/Scripts/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-    <!-- Custom js for this page-->
-    <script src="~/Scripts/todolist.js"></script>
-    <script src="~/Scripts/dashboard.js"></script>
-    <script src="~/Scripts/My Custom/HouseholdWizard.js"></script>
-    <script src="~/Scripts/My Custom/HomeIndex.js"></script>
-    <script>
-        function logout() {
-            document.getElementById('logoutForm').submit();
-        }
-    </script>
-    <!-- End custom js for this page-->
-    @RenderSection("scripts", required: false)
 </body>
 </html>

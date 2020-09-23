@@ -27,6 +27,14 @@ namespace Xabvfinacialportal.Models
 
         // Children
         public virtual ICollection<Transaction> Transactions {get;set;}
+        public BudgetItem(decimal targetAmount, string itemName, int budgetId)
+        {
+            TargetAmount = targetAmount;
+            ItemName = itemName;
+            BudgetId = budgetId;
+            Transactions = new HashSet<Transaction>();
+            Created = DateTime.Now;
+        }
         public BudgetItem()
         {
             Transactions = new HashSet<Transaction>();

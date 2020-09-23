@@ -16,6 +16,7 @@ using Xabvfinacialportal.ViewModels;
 
 namespace Xabvfinacialportal.Controllers
 {
+    [Authorize]
     public class HouseholdsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -41,19 +42,20 @@ namespace Xabvfinacialportal.Controllers
                 roleHelper.UpdateUserRole(user.Id, "Head");
                 await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ConfigureHouse");
             }
 
             return View(housename);
         }
 
         // GET: ConfigureHousehold after creation
+        [Authorize(Roles = "Head")]
         [HttpGet]
         public ActionResult ConfigureHouse()
         {
             var model = new ConfigureHouseVM();
-            model.HouseholdId = User.Identity.GetHouseholdId();
-            if (model.HouseholdId == null)
+            var HouseholdId = User.Identity.GetHouseholdId();
+            if (HouseholdId == null)
             {
                 return RedirectToAction("Index","Home");
             }
@@ -61,29 +63,29 @@ namespace Xabvfinacialportal.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult ConfigureHouse(ConfigureHouseVM model)
+        public JsonResult ConfigureHouse(ConfigureHouseVM houseSetup)
         {
-            var bankAccount = new BankAccount(model.StartingBalance, model.WarningBalance, model.AccountName);
-            bankAccount.AccountType = model.AccountType;
-            db.BankAccounts.Add(bankAccount);
-
-            var budget = new Budget();
-            budget.HouseHoldId = (int)model.HouseholdId;
-            budget.BudgetName = model.Budget.BudgetName;
-            db.Budgets.Add(budget);
-
-            db.SaveChanges();
-
-            var budgetItem = new BudgetItem();
-            budgetItem.BudgetId = budget.Id;
-            budgetItem.ItemName = model.BudgetItem.ItemName;
-            budgetItem.TargetAmount = model.BudgetItem.TargetAmount;
-            db.BudgetItems.Add(budgetItem);
-
-            db.SaveChanges();
-
-            return RedirectToAction("Index", "Home");
+            foreach(var account in houseSetup.BankAccounts)
+            {
+                BankAccount bankAccount = new BankAccount(account.StartingBalance, account.WarningBalance, account.Name);
+                db.BankAccounts.Add(bankAccount);
+                db.SaveChanges();
+            }
+            foreach(var b in houseSetup.Budgets)
+            {
+                Budget budget = new Budget(b.Name);
+                db.Budgets.Add(budget);
+                db.SaveChanges();
+                var budgetId = budget.Id;
+                foreach(var item in b.Items)
+                {
+                    BudgetItem budgetItem = new BudgetItem(item.TargetValue, item.Name, budgetId);
+                    db.BudgetItems.Add(budgetItem);
+                    db.SaveChanges();
+                }
+            }
+            var myJson = "/Home/Index";
+            return Json(myJson);
         }
 
         // POST: Households/Edit/5
