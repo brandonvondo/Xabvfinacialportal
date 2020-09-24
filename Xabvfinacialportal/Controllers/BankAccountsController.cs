@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -6,10 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Xabvfinacialportal.Extensions;
 using Xabvfinacialportal.Models;
 
 namespace Xabvfinacialportal.Controllers
 {
+    [Authorize]
     public class BankAccountsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -29,6 +32,11 @@ namespace Xabvfinacialportal.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             BankAccount bankAccount = db.BankAccounts.Find(id);
+            if (bankAccount.HouseholdId != User.Identity.GetHouseholdId() && bankAccount.UserId != User.Identity.GetUserId())
+            {
+                ViewBag.Error = "Sorry, you are not allowed to be there!";
+                return RedirectToAction("Index", "Home");
+            }
             if (bankAccount == null)
             {
                 return HttpNotFound();

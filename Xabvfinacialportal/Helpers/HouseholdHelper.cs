@@ -20,5 +20,33 @@ namespace Xabvfinacialportal.Helpers
             return household;
         }
 
+        public Household GetHouseholdById(int id)
+        {
+            var household = db.Households.Find(id);
+            return household;
+        }
+
+        public bool CanTransfer(int householdId)
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            var accounts = db.BankAccounts.Where(b => b.HouseholdId == householdId && b.UserId != userId).ToList();
+            if (accounts.Count > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanLeave(int householdId)
+        {
+            var household = db.Households.Where(h => h.Id == householdId).FirstOrDefault();
+            if (household.Members.Count > 1)
+            {
+                return false;
+            }
+            else return true;
+        }
+
     }
 }

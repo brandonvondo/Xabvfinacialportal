@@ -21,6 +21,7 @@ namespace Xabvfinacialportal.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private RoleHelper roleHelper = new RoleHelper();
+        private HouseholdHelper householdHelper = new HouseholdHelper();
 
         // POST: Households/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -37,7 +38,15 @@ namespace Xabvfinacialportal.Controllers
                 db.SaveChanges();
 
                 var user = db.Users.Find(User.Identity.GetUserId());
+
                 user.HouseholdId = household.Id;
+
+                foreach (var account in user.Accounts.ToList())
+                {
+                    account.HouseholdId = household.Id;
+                    db.Entry(account).State = EntityState.Modified;
+                }
+
                 db.SaveChanges();
                 roleHelper.UpdateUserRole(user.Id, "Head");
                 await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
@@ -104,7 +113,7 @@ namespace Xabvfinacialportal.Controllers
             return View(household);
         }
 
-        // POST: Leave Household       user hhId and bank account hhId need to null
+        // POST: Leave Household  user hhId and bank account hhId need to null
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Member")]
@@ -126,16 +135,34 @@ namespace Xabvfinacialportal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // Post: Leave Household as head
+        [HttpGet]
         [Authorize(Roles = "Head")]
-        public async Task<ActionResult> LeaveAsyncHOH(FormCollection form)
+        public ActionResult LeaveAsyncHOH()
+        {
+            var hhId = (int)User.Identity.GetHouseholdId();
+            var house = db.Households.Where(h => h.Id == hhId).FirstOrDefault();
+            if (householdHelper.CanLeave(hhId))
+            {
+                return PartialView("_HeadNoMemLeave");
+            }
+
+            ViewBag.MemberListId = new SelectList(house.Members.Where(m => m.Id != User.Identity.GetUserId()), "Id", "FullName");
+            return PartialView("_HeadMemLeave");
+        }
+
+
+        // Post: Leave Household as head
+        [HttpPost]
+        [Authorize(Roles = "Head")]
+        public async Task<ActionResult> LeaveAsyncHOH(LeaveHHHeadVM leave)
         {
             var user = db.Users.Find(User.Identity.GetUserId());
             var role = roleHelper.ListUserRole(user.Id);
-            string newHeadId = form["NewHead"];
-            if (newHeadId == "none")
+            var household = db.Households.Where(h => h.Id == user.HouseholdId).FirstOrDefault();
+            string newHeadId = leave.MemberListId;
+            if (newHeadId == null)
             {
-                user.Household.IsDeleted = true;
+                household.IsDeleted = true;
                 user.HouseholdId = null;
 
                 foreach (var account in user.Accounts)
@@ -167,32 +194,6 @@ namespace Xabvfinacialportal.Controllers
             await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
 
             return RedirectToAction("Index", "Home");
-        }
-
-        // GET: Households/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Household household = db.Households.Find(id);
-            if (household == null)
-            {
-                return HttpNotFound();
-            }
-            return View(household);
-        }
-
-        // POST: Households/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Household household = db.Households.Find(id);
-            db.Households.Remove(household);
-            db.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

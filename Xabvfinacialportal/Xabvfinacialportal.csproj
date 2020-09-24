@@ -171,6 +171,7 @@
     <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\BudgetItemsController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
+    <Compile Include="Controllers\CreateModalController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HouseholdsController.cs" />
     <Compile Include="Controllers\InvitationsController.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BankAccountHelper.cs" />
     <Compile Include="Helpers\FileStamper.cs" />
     <Compile Include="Helpers\HouseholdHelper.cs" />
     <Compile Include="Helpers\ImageUploadValidator.cs" />
@@ -208,7 +210,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ConfigureHouseVM.cs" />
+    <Compile Include="ViewModels\CreateBankAccVM.cs" />
+    <Compile Include="ViewModels\CreateBudgetVM.cs" />
     <Compile Include="ViewModels\CreateHouseholdVM.cs" />
+    <Compile Include="ViewModels\CreateItemVM.cs" />
+    <Compile Include="ViewModels\LeaveHHHeadVM.cs" />
     <Compile Include="ViewModels\TransactionModalVM.cs" />
     <Compile Include="ViewModels\xEditableVM.cs" />
   </ItemGroup>
@@ -235,6 +241,9 @@
     <Content Include="images\auth\lockscreen-bg.jpg" />
     <Content Include="images\auth\login-bg.jpg" />
     <Content Include="images\auth\register-bg.jpg" />
+    <Content Include="images\bank-transfer-in.png" />
+    <Content Include="images\bank-transfer-out.png" />
+    <Content Include="images\bank-transfer.png" />
     <Content Include="images\carousel\banner_1.jpg" />
     <Content Include="images\carousel\banner_10.jpg" />
     <Content Include="images\carousel\banner_11.jpg" />
@@ -446,9 +455,12 @@
     <Content Include="Scripts\modal-demo.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\morris.js" />
+    <Content Include="Scripts\My Custom\CreateModal.js" />
     <Content Include="Scripts\My Custom\EmailValidate.js" />
     <Content Include="Scripts\My Custom\HomeIndex.js" />
     <Content Include="Scripts\My Custom\HouseholdWizard.js" />
+    <Content Include="Scripts\My Custom\LeaveHousehold.js" />
+    <Content Include="Scripts\My Custom\TransactionModal.js" />
     <Content Include="Scripts\no-ui-slider.js" />
     <Content Include="Scripts\off-canvas.js" />
     <Content Include="Scripts\owl-carousel.js" />
@@ -1876,7 +1888,6 @@
     <Content Include="Views\Transactions\Details.cshtml" />
     <Content Include="Views\Transactions\Edit.cshtml" />
     <Content Include="Views\Transactions\Index.cshtml" />
-    <Content Include="Views\Households\ConfigureHouseOLD.cshtml" />
     <Content Include="Views\Households\ConfigureHouse.cshtml" />
     <Content Include="Scripts\vendors\.DS_Store" />
     <Content Include="Scripts\vendors\chartist\chartist.min.js.map" />
@@ -1926,10 +1937,21 @@
     <Content Include="Scripts\vendors\tinymce\skins\ui\oxide\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\vendors\jquery-ui-1.12.1\package.json" />
     <Content Include="site.webmanifest" />
-    <Content Include="Views\Transactions\TransactionModal.cshtml" />
+    <Content Include="Views\Transactions\_TransactionModalWithdraw.cshtml" />
     <Content Include="Views\Home\UserProfile.cshtml" />
     <Content Include="Views\Home\error.cshtml" />
     <Content Include="Views\Home\_NotifLoader.cshtml" />
+    <Content Include="Views\Transactions\_TransactionModalDeposit.cshtml" />
+    <Content Include="Views\Transactions\_TransactionModalTransfer.cshtml" />
+    <Content Include="Views\Transactions\_TransactionModalTransferNeedId.cshtml" />
+    <Content Include="Views\Transactions\_TransactionModalDepositNeedId.cshtml" />
+    <Content Include="Views\Transactions\_TransactionModalWithdrawNeedId.cshtml" />
+    <Content Include="Views\Households\_HeadNoMemLeave.cshtml" />
+    <Content Include="Views\Households\_HeadMemLeave.cshtml" />
+    <Content Include="Views\Account\AcceptInvitation.cshtml" />
+    <Content Include="Views\CreateModal\_CreateBudget.cshtml" />
+    <Content Include="Views\CreateModal\_CreateBudgetItem.cshtml" />
+    <Content Include="Views\CreateModal\_CreateBankAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

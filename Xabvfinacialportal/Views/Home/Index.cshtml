@@ -52,6 +52,12 @@
         </div>
     </div>
 }
+else if (currentUser.Accounts.Count == 0 || currentUser.Budgets.Count == 0)
+{
+                <div class="starthold text-center">
+                    <a class="btn-success btn-lg accback getstarted font-weight-bold" href=@Url.Action("ConfigureHouse","Households")>Let's Get Started!</a>
+                </div>
+}
 else
 {
     var household = householdHelper.GetUserHousehold();
@@ -59,7 +65,7 @@ else
     var head = roleHelper.FindHouseholdHead(houseList);
     var members = roleHelper.FindHouseholdMembers(houseList);
     <div class="row">
-        <h1 class="text-center onehPnt">@household.HouseholdName Dashboard</h1>
+        <h1 class="text-center onehPnt" >@household.HouseholdName Dashboard</h1>
     </div>
     <div class="row">
         <div class="col-md-8 col-sm-12">
@@ -67,8 +73,14 @@ else
                 <li class="nav-item" id="budget">
                     <a class="nav-link active" id="pills-budget-tab" data-toggle="pill" href="#pills-budget" role="tab" aria-controls="pills-budget" aria-selected="true">Household Budgets</a>
                 </li>
+                <li class="nav-item" id="budget2">
+                    <a class="nav-link" id="pills-budget2-tab" data-toggle="pill" href="#pills-budget2" role="tab" aria-controls="pills-budget2" aria-selected="false">Personal Budgets</a>
+                </li>
                 <li class="nav-item" id="bankaccount">
                     <a class="nav-link" id="pills-bankaccount-tab" data-toggle="pill" href="#pills-bankaccount" role="tab" aria-controls="pills-bankaccount" aria-selected="false">Household Bank Accounts</a>
+                </li>
+                <li class="nav-item" id="bankaccount2">
+                    <a class="nav-link" id="pills-bankaccount2-tab" data-toggle="pill" href="#pills-bankaccount2" role="tab" aria-controls="pills-bankaccount2" aria-selected="false">Personal Bank Accounts</a>
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
@@ -77,6 +89,9 @@ else
                     {
                         foreach (var budget in household.Budgets.ToList())
                         {
+                            string chartName = $"pieChart{budget.Id}";
+                            var chartData = userHelper.BudgetItemGraphData(budget.Id);
+                            var chartLables = userHelper.BudgetItemGraphLables(budget.Id);
                             <div class="card card-inverse-primary budget-card">
                                 <div class="card-header">
                                     <div class="row">
@@ -104,7 +119,7 @@ else
                                                 {
                                                     foreach (var item in budget.Items.ToList())
                                                     {
-                                                        <li class="no-bullets">
+                                                        <li class="no-bullets budgetholder">
                                                             <div class="row">
                                                                 <div class="col-12 text-center">
                                                                     <h3>Budget Item: '@item.ItemName'</h3>
@@ -113,10 +128,10 @@ else
                                                             <hr />
                                                             <div class="row">
                                                                 <div class="col-6 text-center">
-                                                                    <h5>Target Amount: @budget.TargetAmount</h5>
+                                                                    <h5>Target Amount: @item.TargetAmount</h5>
                                                                 </div>
                                                                 <div class="col-6 text-center">
-                                                                    <h5>Current Amount: @budget.CurrentAmount</h5>
+                                                                    <h5>Current Amount: @item.CurrentAmount</h5>
                                                                 </div>
                                                             </div>
                                                         </li>
@@ -130,8 +145,72 @@ else
                                                 }
                                             </ul>
                                         </div>
+
+                                        <script>
+                                            $(document).ready(function () {
+                                                var chartData = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(chartData))');
+                                                var chartLabels = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(chartLables))');
+                                                const dataArr = new Array();
+                                                const labelArr = new Array();
+                                                const bgArr = new Array();
+                                                const borderArr = new Array();
+
+                                                for (var i in chartData) {
+
+                                                    dataArr.push(chartData[i]);
+                                                }
+
+                                                for (var i in chartLabels) {
+
+                                                    labelArr.push(chartLabels[i]);
+                                                }
+
+                                                var evenBackgroundColor = 'rgba(255, 99, 132, 0.2)';
+                                                var evenBorderColor = 'rgba(255,99,132,1)';
+                                                var oddBackgroundColor = 'rgba(75, 192, 192, 0.2)';
+                                                var oddBorderColor = 'rgba(153, 102, 255, 1)';
+
+                                                for (var i = 0; i < dataArr.length; i++) {
+                                                    if (i % 2 === 0) {
+                                                        bgArr.push(evenBackgroundColor);
+                                                        borderArr.push(evenBorderColor);
+                                                    } else {
+                                                        bgArr.push(oddBackgroundColor);
+                                                        borderArr.push(oddBorderColor);
+                                                    }
+                                                }
+
+                                                var doughnutPieData = {
+                                                    datasets: [{
+                                                        data: dataArr,
+                                                        backgroundColor: bgArr,
+                                                        borderColor: borderArr,
+                                                    }],
+
+                                                    // These labels appear in the legend and in the tooltips when hovering different arcs
+                                                    labels: labelArr
+                                                };
+
+                                                var doughnutPieOptions = {
+                                                    responsive: true,
+                                                    animation: {
+                                                        animateScale: true,
+                                                        animateRotate: true
+                                                    }
+                                                }
+                                                if ($('#@chartName').length) {
+                                                    var pieChartCanvas = $("#@chartName").get(0).getContext("2d");
+                                                    var pieChart = new Chart(pieChartCanvas, {
+                                                        type: 'pie',
+                                                        data: doughnutPieData,
+                                                        options: doughnutPieOptions
+                                                    });
+                                                }
+                                            });
+                                        </script>
                                         <div class="col-4">
-                                            graph placeholder
+                                            <h4 class="card-title text-center">Budget Items Target Goals Breakdown</h4>
+                                            <canvas id=@chartName></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -144,6 +223,149 @@ else
                         <div class="card card-inverse-primary">
                             <div class="card-body">
                                 <h1>There are no budgets for this household.</h1>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane fade" id="pills-budget2" role="tabpanel" aria-labelledby="pills-budget2">
+                    @if (currentUser.Budgets.Count > 0)
+                    {
+                        foreach (var budget in currentUser.Budgets.ToList())
+                        {
+
+                            string chartName = $"pieChart{budget.Id}";
+                            var chartData = userHelper.BudgetItemGraphData(budget.Id);
+                            var chartLables = userHelper.BudgetItemGraphLables(budget.Id);
+                            <div class="card card-inverse-primary budget-card">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-6 text-center">
+                                            <h1>Budget: '@budget.BudgetName'</h1>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <h2>Created by Me</h2>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 text-center">
+                                            <h3>Target Amount: @budget.TargetAmount</h3>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <h3>Current Amount: @budget.CurrentAmount</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <ul>
+                                                @if (budget.Items.Count > 0)
+                                                {
+                                                    foreach (var item in budget.Items.ToList())
+                                                    {
+                                                        <li class="no-bullets budgetholder">
+                                                            <div class="row">
+                                                                <div class="col-12 text-center">
+                                                                    <h3>Budget Item: '@item.ItemName'</h3>
+                                                                </div>
+                                                            </div>
+                                                            <hr />
+                                                            <div class="row">
+                                                                <div class="col-6 text-center">
+                                                                    <h5>Target Amount: @item.TargetAmount</h5>
+                                                                </div>
+                                                                <div class="col-6 text-center">
+                                                                    <h5>Current Amount: @item.CurrentAmount</h5>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <li>
+                                                        <h3 class="text-center">No Budget Items for '@budget.BudgetName'</h3>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                        <script>
+                                            $(document).ready(function () {
+                                                var chartData = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(chartData))');
+                                                var chartLabels = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(chartLables))');
+                                                const dataArr = new Array();
+                                                const labelArr = new Array();
+                                                const bgArr = new Array();
+                                                const borderArr = new Array();
+
+                                                for (var i in chartData) {
+
+                                                    dataArr.push(chartData[i]);
+                                                }
+
+                                                for (var i in chartLabels) {
+
+                                                    labelArr.push(chartLabels[i]);
+                                                }
+
+                                                var evenBackgroundColor = 'rgba(255, 99, 132, 0.2)';
+                                                var evenBorderColor = 'rgba(255,99,132,1)';
+                                                var oddBackgroundColor = 'rgba(75, 192, 192, 0.2)';
+                                                var oddBorderColor = 'rgba(153, 102, 255, 1)';
+
+                                                for (var i = 0; i < dataArr.length; i++) {
+                                                    if (i % 2 === 0) {
+                                                        bgArr.push(evenBackgroundColor);
+                                                        borderArr.push(evenBorderColor);
+                                                    } else {
+                                                        bgArr.push(oddBackgroundColor);
+                                                        borderArr.push(oddBorderColor);
+                                                    }
+                                                }
+
+                                                var doughnutPieData = {
+                                                    datasets: [{
+                                                        data: dataArr,
+                                                        backgroundColor: bgArr,
+                                                        borderColor: borderArr,
+                                                    }],
+
+                                                    // These labels appear in the legend and in the tooltips when hovering different arcs
+                                                    labels: labelArr
+                                                };
+
+                                                var doughnutPieOptions = {
+                                                    responsive: true,
+                                                    animation: {
+                                                        animateScale: true,
+                                                        animateRotate: true
+                                                    }
+                                                }
+                                                if ($('#@chartName').length) {
+                                                    var pieChartCanvas = $("#@chartName").get(0).getContext("2d");
+                                                    var pieChart = new Chart(pieChartCanvas, {
+                                                        type: 'pie',
+                                                        data: doughnutPieData,
+                                                        options: doughnutPieOptions
+                                                    });
+                                                }
+                                            });
+                                        </script>
+                                        <div class="col-4">
+                                            <h4 class="card-title text-center">Budget Items Target Goals Breakdown</h4>
+                                            <canvas id=@chartName></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="card card-inverse-primary">
+                            <div class="card-body">
+                                <h1>You have no budgets.</h1>
                             </div>
                         </div>
                     }
@@ -174,9 +396,9 @@ else
                                                     <td>@account.User.FullName (Me)</td>
                                                     <td>$@account.CurrentBalance</td>
                                                     <td>
-                                                        <button name=@account.Id class="btn btn-outline-primary">Withdraw</button>
-                                                        <button name=@account.Id class="btn btn-outline-primary">Deposit</button>
-                                                        <button name=@account.Id class="btn btn-outline-primary">View</button>
+                                                        <button name=@account.Id class="btn btn-outline-primary" onclick="createTransaction('@account.Id','withdraw')">Withdraw</button>
+                                                        <button name=@account.Id class="btn btn-outline-primary" onclick="createTransaction('@account.Id','deposit')">Deposit</button>
+                                                        <a name=@account.Id class="btn btn-outline-primary" href=@Url.Action("Details", "BankAccounts", new { id = account.Id } ) >View</a>
                                                     </td>
                                                 </tr>
                                             }
@@ -187,8 +409,8 @@ else
                                                     <td>@account.User.FullName</td>
                                                     <td>$@account.CurrentBalance</td>
                                                     <td>
-                                                        <button name=@account.Id class="btn btn-outline-primary">Transfer</button>
-                                                        <button name=@account.Id class="btn btn-outline-primary">View</button>
+                                                        <button name=@account.Id class="btn btn-outline-primary" onclick="createTransaction('@account.Id','transfer')">Transfer</button>
+                                                        <a name=@account.Id class="btn btn-outline-primary" href=@Url.Action("Details", "BankAccounts", new { id = account.Id } )>View</a>
                                                     </td>
                                                 </tr>
                                             }
@@ -208,6 +430,49 @@ else
                         </div>
                     </div>
                 </div>
+
+                <div class="tab-pane fade" id="pills-bankaccount2" role="tabpanel" aria-labelledby="pills-bankaccount2">
+                    <div class="card">
+                        <div class="table-responsive bankaccounttable">
+                            <table id="bankaccounttable2" class="table order-listing">
+                                <thead>
+                                    <tr>
+                                        <th>Account Name</th>
+                                        <th>Account Balance</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (currentUser.Accounts.ToList().Count > 0)
+                                    {
+                                        foreach (var account in currentUser.Accounts.ToList())
+                                        {
+                                                <tr>
+                                                    <td>@account.AccountName</td>
+                                                    <td>$@account.CurrentBalance</td>
+                                                    <td>
+                                                        <button name=@account.Id class="btn btn-outline-primary" onclick="createTransaction('@account.Id','withdraw')">Withdraw</button>
+                                                        <button name=@account.Id class="btn btn-outline-primary" onclick="createTransaction('@account.Id','deposit')">Deposit</button>
+                                                        <a name=@account.Id class="btn btn-outline-primary" href=@Url.Action("Details", "BankAccounts", new { id = account.Id } )>View</a>
+                                                    </td>
+                                                </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>Empty Table</td>
+                                            <td>No Accounts</td>
+                                            <td>Add an Account</td>
+                                            <td>To get started</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="col-md-4 side-col col-sm-12">
@@ -217,7 +482,7 @@ else
                     <div class="card">
                         <div class="card-body">
                             <h2>Invite Members</h2>
-                            @using (Html.BeginForm("Create", "Invitation"))
+                            @using (Html.BeginForm("Create", "Invitations"))
                             {
                                 <br />
                                 @Html.AntiForgeryToken()
@@ -249,12 +514,12 @@ else
                                                 var id = "dropdownAccounts" + $"{head.DisplayName}";
                                                 <div class="dropup">
                                                     <button class="btn btn-primary dropdown-toggle" data-flip="false" type="button" id=@id data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                         Accs <i class="mdi mdi-bank"></i>
+                                                        Accs <i class="mdi mdi-bank"></i>
                                                     </button>
                                                     <div class="dropdown-menu bamenu" aria-labelledby=@id>
                                                         @foreach (var account in head.Accounts.ToList())
                                                         {
-                                                            <a class="dropdown-item accback" href=@Url.Action("Details","BankAccount", new { id = account.Id })>@account.AccountName</a>
+                                                            <a class="dropdown-item accback" href=@Url.Action("Details","BankAccounts", new { id = account.Id })>@account.AccountName</a>
                                                         }
                                                     </div>
                                                 </div>
@@ -272,24 +537,24 @@ else
                                                     @if (member.Accounts.ToList().Count > 0)
                                                     {
                                                         var id = $"dropdownAccounts{member.DisplayName}";
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button" id=@id data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <i class="mdi mdi-bank"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu" aria-labelledby=@id>
-                                                                <h6 class="dropdown-header">Accounts</h6>
-                                                                @foreach (var account in member.Accounts.ToList())
-                                                                {
-                                                                    <a class="dropdown-item" href=@Url.Action("Details", "BankAccount", new { id = account.Id })>@account.AccountName</a>
-                                                                }
-                                                            </div>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-primary dropdown-toggle" type="button" id=@id data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="mdi mdi-bank"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby=@id>
+                                                            <h6 class="dropdown-header">Accounts</h6>
+                                                            @foreach (var account in member.Accounts.ToList())
+                                                            {
+                                                                <a class="dropdown-item" href=@Url.Action("Details", "BankAccounts", new { id = account.Id })>@account.AccountName</a>
+                                                            }
                                                         </div>
+                                                    </div>
                                                     }
                                                 </td>
                                             </tr>
                                         }
                                     }
-                                    </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -300,12 +565,19 @@ else
                     <div class="card-body">
                         <h2>Need to leave the Household?</h2>
                         <h5>Warning: you WILL have to be reinvited to join back!</h5>
-                        @using (Html.BeginForm("LeaveAsyncHH", "Household"))
+                        @if (User.IsInRole("Member"))
                         {
-                            <br />
-                            @Html.AntiForgeryToken()
-                            <br />
-                            <input type="submit" class="btn btn-danger" value="LEAVE?" />
+                            using (Html.BeginForm("LeaveAsyncHH", "Households"))
+                            {
+                                <br />
+                                @Html.AntiForgeryToken()
+                                <br />
+                                <input type="submit" class="btn btn-danger" value="LEAVE?" />
+                            }
+                        }
+                        else if (User.IsInRole("Head"))
+                        {
+                        <button type="button" class="btn btn-danger" onclick="leaveHOH()">LEAVE?</button>
                         }
                     </div>
                 </div>

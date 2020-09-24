@@ -1,0 +1,22 @@
+﻿@model Xabvfinacialportal.ViewModels.LeaveHHHeadVM
+
+@using (Html.BeginForm("LeaveAsyncHOH", "HouseHold", FormMethod.Post))
+{
+    <div class="modal-body">
+        <h1 class="full-width text-center">LEAVE HOUSEHOLD AND TRANSFER LEADERSHIP?</h1>
+        <br />
+        @Html.AntiForgeryToken()
+
+        <h4 class="full-width text-center">First thing is first, let's select someone to take our place!</h4>
+        <br />
+        <div class="col-10 offset-1">
+            @Html.DropDownList("MemberListId", null, htmlAttributes: new { @class = "form-control, lightback" })
+        </div>
+        <br />
+        <h4 class="full-width text-center">If you submit this form you will leave your Household and will need to be invited back.</h4>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Leave this Household + Transfer leadership!</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal">Take me Back!</button>
+    </div>
+}

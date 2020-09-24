@@ -1,0 +1,48 @@
+﻿@model Xabvfinacialportal.ViewModels.TransactionModalVM
+    @{ 
+        Xabvfinacialportal.Helpers.BankAccountHelper bankAccountHelper = new Xabvfinacialportal.Helpers.BankAccountHelper();
+        var accountName = bankAccountHelper.GetBankAccountNameById(Model.AccountId);
+    }
+@using (Html.BeginForm("Create", "Transactions", FormMethod.Post))
+{
+    <div class="modal-body">
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h1 class="transferhead text-center">Transfer to @accountName</h1>
+            <br />
+            <h4>Choose your own account to pull funds from.</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Purpose)
+            @Html.HiddenFor(model => model.AccountId)
+            @Html.Hidden("TransactionType", 2)
+            <div class="form-group">
+                @Html.Label("My Bank Account", htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.DropDownList("TransferId", null, htmlAttributes: new { @class = "form-control, lightback" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control, lightback", @data_inputmask = "'alias': 'currency'" } })
+                    @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Memo, htmlAttributes: new { @class = "control-label col-md-12" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Memo, new { rows = 4, cols = 40, maxlength = 148, @class = "form-control, lightback", @placeholder = "Insert memo here, e.g. 'Fast food with friends'" })
+                    @Html.ValidationMessageFor(model => model.Memo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+    </div>
+}

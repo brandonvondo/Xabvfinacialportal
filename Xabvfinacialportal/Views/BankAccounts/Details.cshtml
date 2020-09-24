@@ -1,146 +1,165 @@
 ﻿@model Xabvfinacialportal.Models.BankAccount
-    @using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Details";
+    Xabvfinacialportal.Helpers.BankAccountHelper bankAccountHelper = new Xabvfinacialportal.Helpers.BankAccountHelper();
 }
 
-<div class="col-10 offset-1">
-    <div class="row">
-        <div class="col-9">
-            <div class="row">
-                <h1 class="text-center onehPnt">
-                    @Model.AccountName
-                    @if (User.Identity.GetUserId() == Model.UserId)
-                    {
+        <div class="row">
+            <h1 class="text-center onehPnt">
+                @Model.AccountName
+                @if (User.Identity.GetUserId() == Model.UserId)
+                {
 
-                        <button class="btn btn-primary btn-icon accountedit-btn"><i class="mdi mdi-pencil"></i></button>
-                    }
-                </h1>
-            </div>
-            <div class="row">
+                    <button class="btn btn-primary btn-icon mr-4"><i class="mdi mdi-pencil"></i></button>
+                }
+            </h1>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-sm-12">
                 <ul class="nav nav-pills nav-pills-success no-bullets" id="pills-tab" role="tablist">
-                    <li class="nav-item" id="dashboard">
-                        <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-dashboard" aria-selected="true">Dashboard</a>
+                    <li class="nav-item" id="budget">
+                        <a class="nav-link active" id="pills-budget-tab" data-toggle="pill" href="#pills-budget" role="tab" aria-controls="pills-budget" aria-selected="true">Account Dashboard</a>
                     </li>
-                    @*<li class="nav-item" id="history">
-                        <a class="nav-link" id="pills-history-tab" data-toggle="pill" href="#pills-history" role="tab" aria-controls="pills-history" aria-selected="false">History</a>
-                    </li>*@
-                    <li class="nav-item" id="transactions">
-                        <a class="nav-link" id="pills-transactions-tab" data-toggle="pill" href="#pills-transactions" role="tab" aria-controls="pills-transactions" aria-selected="false">Transactions</a>
+                    <li class="nav-item" id="bankaccount">
+                        <a class="nav-link" id="pills-bankaccount-tab" data-toggle="pill" href="#pills-bankaccount" role="tab" aria-controls="pills-bankaccount" aria-selected="false">Transactions</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-budget" role="tabpanel" aria-labelledby="pills-budget">
+                        <div class="col-12">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="card card-inverse-primary">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h2 class="text-center">
+                                                        Starting Balance:
+                                                        @Model.StartingBalance
+                                                    </h2>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h2 class="text-center">Transaction Count: @Model.Transactions.Count</h2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card card-inverse-info">
+                                        <div class="card-body">
+                                            <h2 class="text-center">Current Balance: </h2>
+                                            <br />
+                                            <h1 class="text-center">
+                                                @Model.CurrentBalance
+                                            </h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card">
+                                        <div class="card-body card-inverse-danger">
+                                            <h2 class="text-center">
+                                                Warning Balance @if (User.Identity.GetUserId() == Model.UserId)
+                                                {
 
-                    <div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard">
-                        <div class="row">
-                            <div class="card">
-                                <div class="card-body">
-
+                                                    <button class="btn btn-primary btn-icon accountedit-btn"><i class="mdi mdi-pencil"></i></button>
+                                                }
+                                            </h2>
+                                            <br />
+                                            <h1 class="text-center">
+                                                @Model.WarningBalance
+                                            </h1>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h2 class="text-center">Current Balance:</h2>
-                                    <br />
-                                    @Model.CurrentBalance
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <h2 class="text-center">Starting Balance: </h2>
-                                <br />
-                                @Model.StartingBalance
-                            </div>
-                            <div class="col-6">
-                                <h2 class="text-center">
-                                    Warning Balance @if (User.Identity.GetUserId() == Model.UserId)
-                                    {
 
-                                        <button class="btn btn-primary btn-icon accountedit-btn"><i class="mdi mdi-pencil"></i></button>
-                                    }
-                                </h2>
-                                <br />
-                                @Model.WarningBalance
-                            </div>
-                        </div>
                     </div>
 
-                    @*<div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history">
-                    </div>*@
-
-                    <div class="tab-pane fade" id="pills-transactions" role="tabpanel" aria-labelledby="pills-transactions">
-                        <table id="transactiontable" class="table order-listing">
-                            <thead>
-                                <tr>
-                                    <th>Creator Name</th>
-                                    <th>Transaction Amount</th>
-                                    <th>Budget Item</th>
-                                    <th>Transaction Type</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.Transactions.ToList().Count > 0)
-                                {
-                                    foreach (var transaction in Model.Transactions.ToList())
-                                    {
-
+                    <div class="tab-pane fade" id="pills-bankaccount" role="tabpanel" aria-labelledby="pills-bankaccount">
+                        <div class="card">
+                            <div class="table-responsive bankaccounttable">
+                                <table id="transactiontable" class="table order-listing">
+                                    <thead>
                                         <tr>
-                                            <td>@transaction.User.FullName</td>
-                                            <td>$ @transaction.Amount</td>
-                                            <td>@transaction.BudgetItem.ItemName</td>
-                                            <td>@transaction.TransactionType</td>
-                                            <td>
-                                                <button class="btn btn-outline-primary">View</button>
-                                            </td>
+                                            <th>Creator Name</th>
+                                            <th>Transaction Amount</th>
+                                            <th>Budget Item</th>
+                                            <th>Transaction Type</th>
+                                            @*<th>Actions</th>*@
                                         </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td>Name Here</td>
-                                        <td>Amount Here</td>
-                                        <td>Item Here</td>
-                                        <td>Transaction Type</td>
-                                        <td>Create some Transactions to begin</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Transactions.ToList().Count > 0)
+                                        {
+                                            foreach (var transaction in Model.Transactions.ToList())
+                                            {
 
+                                                <tr>
+                                                    <td>@transaction.User.FullName</td>
+                                                    <td>$ @transaction.Amount</td>
+                                                    <td>
+                                                        @if (transaction.BudgetItemId != null)
+                                                        {
+                                                            var transactionBI = bankAccountHelper.TransactionBudgetItemName(transaction.Id);
+
+                                                            @transactionBI
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>N/A</span>
+                                                        }
+                                                    </td>
+                                                    <td>@transaction.TransactionType</td>
+                                                    @*<td>
+                                                        <button class="btn btn-outline-primary">View</button>
+                                                    </td>*@
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>Name Here</td>
+                                                <td>Amount Here</td>
+                                                <td>Item Here</td>
+                                                <td>Transaction Type</td>
+                                                @*<td>Create some Transactions to begin</td>*@
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-3">
-            <div class="row">
-                @if (User.Identity.GetUserId() != Model.UserId)
+            <div class="col-md-4 side-col col-sm-12">
+                <div class="row">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="text-center">Owned by: <br />@Model.User.FullName</h2>
+                        </div>
+                    </div>
+                </div>
+                @if (User.Identity.GetUserId() == Model.UserId)
                 {
-                    <h1 class="mb-5">Owner: @Model.User.FullName</h1>
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h2>Create a Transaction:</h2>
+                                <button type="button" class="btn btn-primary mr-4" onclick="createTransaction('@Model.Id','withdraw')">Withdraw</button>
+                                <button type="button" class="btn btn-success" onclick="createTransaction('@Model.Id','deposit')">Deposit</button>
+                            </div>
+                        </div>
+                    </div>
                 }
             </div>
-            <div class="row">
-                <h1 class="mb-5">@Html.ActionLink("Return to Household", "Index", "Home")</h1>
-            </div>
-            <div class="row mt-5">
-                <div class="card">
-                    <div class="dropdown-menu" aria-labelledby="dropdownTransaction">
-                        <h6 class="dropdown-header">Create a Transaction</h6>
-                        <a class="dropdown-item" href="#">Transfer</a>
-                        @if (User.Identity.GetUserId() == Model.UserId)
-                        {
-                            <a class="dropdown-item" href="#">Withdraw</a>
-                            <a class="dropdown-item" href="#">Desposit</a>
-
-                        }
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
-</div>

@@ -3,6 +3,7 @@
 @{
     UserHelper userHelper = new UserHelper();
     RoleHelper roleHelper = new RoleHelper();
+    HouseholdHelper householdHelper = new HouseholdHelper();
     var me = userHelper.GetUser();
     var role = roleHelper.ListUserRole();
 }
@@ -58,14 +59,55 @@
     <script src="~/Scripts/vendors/justgage/raphael-2.1.4.min.js"></script>
     <script src="~/Scripts/vendors/datatables.net/jquery.dataTables.js"></script>
     <script src="~/Scripts/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+    <script src="~/Scripts/vendors/chart.js/Chart.min.js"></script>
     <!-- Custom js for this page-->
     <script src="~/Scripts/My Custom/HouseholdWizard.js"></script>
     <script src="~/Scripts/My Custom/HomeIndex.js"></script>
+    <script src="~/Scripts/My Custom/TransactionModal.js"></script>
+    <script src="~/Scripts/My Custom/LeaveHousehold.js"></script>
     <script>
         function logout() {
             document.getElementById('logoutForm').submit();
         }
     </script>
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(document).ready(function () {
+                swal({
+                    title: 'Uh oh!',
+                    text: '@ViewBag.Error',
+                    icon: 'error',
+                    button: {
+                        text: "Continue",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-primary"
+                    }
+                })
+            });
+        </script>
+        ViewBag.Error = null;
+    }
+
+    @if (ViewBag.Message2 != null)
+    {
+        <script>
+            $(document).ready(function () {
+                swal({
+                    text: '@ViewBag.Message2',
+                    icon: 'success',
+                    button: {
+                        text: "Continue",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-primary"
+                    }
+                })
+            });
+        </script>
+        ViewBag.Message2 = null;
+    }
     <!-- End custom js for this page-->
     @RenderSection("scripts", required: false)
     <div class="container-scroller">
@@ -78,12 +120,12 @@
                             <li class="nav-item ml-0 mr-5 d-lg-flex d-none">
                                 <a href="#" class="nav-link horizontal-nav-left-menu profile-settings-open"><i class="mdi mdi-format-list-bulleted"></i></a>
                             </li>
-                            <li class="nav-item dropdown">
+                            @*<li class="nav-item dropdown">
                                 <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
                                     <i class="mdi mdi-bell mx-0"></i>
                                     <span class="count bg-success">2</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                                </a>*@
+                                @*<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
                                     <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
                                     <a class="dropdown-item preview-item">
                                         <div class="preview-thumbnail">
@@ -124,11 +166,8 @@
                                             </p>
                                         </div>
                                     </a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link count-indicator "><i class="mdi mdi-message-reply-text"></i></a>
-                            </li>
+                                </div>*@
+                            @*</li>*@
                         </ul>
                         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                             <a class="navbar-brand brand-logo" href=@Url.Action("Index","Home")><img src="~/images/logo.svg" alt="logo" /></a>
@@ -167,8 +206,9 @@
                     </div>
                 </div>
             </nav>
-            @if (User.Identity.GetHouseholdId() != 0)
+            @if (User.Identity.GetHouseholdId() != 0 && me.Accounts.Count > 0 && me.Budgets.Count > 0)
             {
+                bool canTransfer = householdHelper.CanTransfer((int)User.Identity.GetHouseholdId());
                 <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -199,44 +239,47 @@
                             <li class="nav-item">
                                 <a class="nav-link" href=@Url.Action("Index","Home")>
                                     <i class="mdi mdi-file-document-box menu-icon"></i>
-                                    <span class="menu-title">Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href=@Url.Action("WhatsNew","Household")>
-                                    <i class="mdi mdi-fire menu-icon"></i>
-                                    <span class="menu-title">What's new?</span>
+                                    <span class="menu-title">Household Dashboard</span>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class=" mdi mdi-bank menu-icon"></i>
-                                    <span class="menu-title">Bank Accounts</span>
+                                    <span class="menu-title">Create</span>
                                     <i class="menu-arrow"></i>
                                 </a>
                                 <div class="submenu">
                                     <ul class="submenu-item">
-                                        <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">My Accounts</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="pages/forms/advanced_elements.html">Household Accounts</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#" onclick="createModal('bankaccount')">Bank Account</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#" onclick="createModal('budget')">Budget</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#" onclick="createModal('budgetitem')">Budget Item</a></li>
                                     </ul>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class=" mdi mdi-format-list-bulleted menu-icon"></i>
-                                    <span class="menu-title">Transactions</span>
-                                    <i class="menu-arrow"></i>
+                                <a class="nav-link">
+                                    <button type="button" class="btn btn-primary btn-sm bnkico" onclick="createTransaction('0','withdraw')"><img class="bnkimg" src="~/images/bank-transfer-out.png" /></button>
+                                    <button type="button" class="btn btn-primary btn-sm bnkico" onclick="createTransaction('0','deposit')"><img class="bnkimg" src="~/images/bank-transfer-in.png" /></button>
+                                    @if (canTransfer)
+                                    {
+                                        <button type="button" class="btn btn-primary btn-sm bnkico" onclick="createTransaction('0','transfer')"><img class="bnkimg" src="~/images/bank-transfer.png" /></button>
+                                    }
+                                    <span class="menu-title">
+                                        Withdraw / Deposit
+                                        @if (canTransfer)
+                                        {
+                                            <span>/ Transfer</span>
+                                        }
+                                    </span>
+
                                 </a>
-                                <div class="submenu">
-                                    <ul class="submenu-item">
-                                        <li class="nav-item"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Withdraw<i class="mdi mdi-play-circle ml-1"></i></button></li>
-                                        <li class="nav-item"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Desposit<i class="mdi mdi-play-circle ml-1"></i></button></li>
-                                        <li class="nav-item"><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal-2">Transfer<i class="mdi mdi-play-circle ml-1"></i></button></li>
-                                    </ul>
-                                </div>
+
                             </li>
+
                         </ul>
+
                     </div>
+
                 </nav>
             }
         </div>
@@ -268,7 +311,7 @@
             <div class="profile-sidebar-body">
                 <ul class="list-profile-items">
                     <li class="profile-item">
-                        <a href=@Url.Action("UserProfile", new { displayname = me.DisplayName })  class="profile-sidebar-link">
+                        <a href=@Url.Action("UserProfile", new { displayname = me.DisplayName }) class="profile-sidebar-link">
                             <div class="d-flex align-items-center">
                                 <i class="mdi mdi-account-outline text-primary"></i>
                                 <div>
@@ -279,15 +322,15 @@
                         </a>
                     </li>
                     @*<li class="profile-item">
-                        <a href="#" class="profile-sidebar-link">
-                            <div class="d-flex align-items-center">
-                                <i class="mdi mdi-email-outline text-info"></i>
-                                <div>
-                                    <h5 class="item-title">My Messages</h5>
+                            <a href="#" class="profile-sidebar-link">
+                                <div class="d-flex align-items-center">
+                                    <i class="mdi mdi-email-outline text-info"></i>
+                                    <div>
+                                        <h5 class="item-title">My Messages</h5>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </li>*@
+                            </a>
+                        </li>*@
                     <li class="profile-item">
                         <a href=@Url.Action("UserProfile", new { displayname = me.DisplayName, section = "Notifications" }) class="profile-sidebar-link">
                             <div class="d-flex align-items-center">
@@ -323,5 +366,19 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+    <!-- Modals -->
+    <div class="modal fade" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="transactionModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="dot-opacity-loader" id="loader">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div id="ajax-shell">
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

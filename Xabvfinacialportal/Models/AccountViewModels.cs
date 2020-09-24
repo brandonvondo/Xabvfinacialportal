@@ -32,6 +32,7 @@ namespace Xabvfinacialportal.Models
         [MinLength(2, ErrorMessage = "Username must be between 2 and 16 characters")]
         public string DisplayName { get; set; }
         public HttpPostedFileBase AvatarPath { get; set; }
+        public int? HouseHoldId { get; set; }
 
     }
 

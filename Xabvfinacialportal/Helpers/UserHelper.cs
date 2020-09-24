@@ -5,6 +5,9 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Ajax.Utilities;
+using System.Web.Helpers;
+using Newtonsoft.Json;
 
 namespace Xabvfinacialportal.Helpers
 
@@ -84,6 +87,51 @@ namespace Xabvfinacialportal.Helpers
             var userId = HttpContext.Current.User.Identity.GetUserId();
             var user = db.Users.Find(userId);
             return $"{user.LastName}, ${user.FirstName}";
+        }
+
+        public ICollection<BudgetItem> GetUserItems(ApplicationUser user)
+        {
+            var list = user.Budgets.ToList();
+            List<BudgetItem> itemList = new List<BudgetItem>();
+
+            foreach (var budget in list)
+            {
+                if (budget.UserId == user.Id)
+                {
+                    foreach(var item in budget.Items.ToList())
+                    {
+                        itemList.Add(item);
+                    }
+                }
+            }
+
+            return itemList;
+        }
+
+        public List<decimal> BudgetItemGraphData(int id)
+        {
+            var budget = db.Budgets.Where(b => b.Id == id).FirstOrDefault();
+            var items = budget.Items.ToList();
+            List<decimal> targetList = new List<decimal>();
+            foreach(var item in items)
+            {
+                targetList.Add(item.TargetAmount);
+            }
+
+            return targetList;
+        }
+
+        public List<string> BudgetItemGraphLables(int id)
+        {
+            var budget = db.Budgets.Where(b => b.Id == id).FirstOrDefault();
+            var items = budget.Items.ToList();
+            List<string> labelList = new List<string>();
+            foreach (var item in items)
+            {
+                labelList.Add(item.ItemName);
+            }
+
+            return labelList;
         }
     }
 }

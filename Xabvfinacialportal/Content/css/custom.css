@@ -1,4 +1,6 @@
-﻿
+﻿.form-control::placeholder {
+    color: silver;
+}
 
 .accname ::-webkit-input-placeholder {
     color: lightgrey;
@@ -195,10 +197,6 @@ body {
 float: right;
 }
 
-.accountedit-btn {
-    float: right;
-}
-
 .side-col .card{
     padding:15px;
     width:90%;
@@ -250,4 +248,85 @@ float: right;
 .accback:hover {
     color: silver !important;
     background-color: #6C50F3 !important;
+}
+
+.lightback {
+    background-color: #9780AF !important;
+    border-radius: 5px;
+    border: 2px solid #6D4B91 !important;
+    padding: 10px;
+    color: white !important;
+}
+
+.lightback::placeholder {
+    color: silver !important;
+}
+
+.transferhead {
+    width: 100%;
+}
+
+#Amount {
+    width: 70% !important;
+}
+#TransactionType {
+    width: 70% !important;
+}
+
+#AccountId {
+    width: 70% !important;
+}
+
+#TransferId {
+    width: 70% !important;
+}
+
+#BudgetItemId {
+    width: 70% !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #1F484B;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #6C50F3;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #6C50F3;
+    }
+
+
+.starthold {
+    width: 100%;
+    margin-top: 40vh !important;
+}
+
+.bnkico {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 0px !important;
+}
+
+.bnkimg {
+    width: 80%;
+    height: auto;
+}
+
+.modal-open {
+    overflow-y: scroll !important;
+}
+
+.budgetholder {
+    outline: 2px solid rebeccapurple;
+    margin-top: 10px;
 }

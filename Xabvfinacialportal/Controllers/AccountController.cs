@@ -155,6 +155,17 @@ namespace Xabvfinacialportal.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            if (TempData["email"] != null)
+            {
+                var model = new ExtendedRegisterViewModel()
+                {
+                    Email = TempData["email"].ToString(),
+                    HouseHoldId = int.Parse(TempData["hhId"].ToString())
+                };
+
+                return View(model);
+            }
+
             return View();
         }
 
@@ -168,7 +179,7 @@ namespace Xabvfinacialportal.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, AvatarPath = WebConfigurationManager.AppSettings["DefaultAvatarPath"], DisplayName = model.DisplayName };
                 var image = model.AvatarPath;
-                if (image != null)
+            if (image != null)
                 {
                     if (ImageUploadValidator.IsWebFriendlyImage(image))
                     {
@@ -235,16 +246,11 @@ namespace Xabvfinacialportal.Controllers
             if(invitation.IsValid && DateTime.Now < expirationDate)
             {
                 var householdName = db.Households.Find(invitation.HouseholdId).HouseholdName;
-                ViewBag.Greeting = $"Thank you for accepting my invitation to join the {householdName} House!";
-                var model = new AcceptInvitationVM()
-                {
-                    InvitationId = invitation.Id,
-                    Email = recipientEmail,
-                    Code = realGuid,
-                    HouseHoldId = invitation.HouseholdId
-                };
+                ViewBag.Message2 = $"Thank you for accepting my invitation to join the {householdName} House!";
 
-                return View(model);
+                TempData["email"] = invitation.RecipientEmail;
+                TempData["hhId"] = invitation.HouseholdId;
+                return RedirectToAction("Register", "Account");
             }
 
             ViewBag.Error = "The invitation was not valid";
@@ -282,30 +288,39 @@ namespace Xabvfinacialportal.Controllers
 
         [Authorize(Roles = "New User")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ManualJoin(string code)
         {
+            if (code == null)
+            {
+                ViewBag.Error = "The invitation was not found";
+                return RedirectToAction("Index", "Home");
+            }
             var user = db.Users.Find(User.Identity.GetUserId());
             var realGuid = Guid.Parse(code);
             var invitation = db.Invitations.FirstOrDefault(i => i.RecipientEmail == user.Email && i.Code == realGuid);
             if (invitation == null)
             {
                 ViewBag.Error = "The invitation was not found";
-                return View("NotFoundError", invitation);
+                return RedirectToAction("Index", "Home");
             }
             var expirationDate = invitation.Created.AddDays(invitation.TTL);
             if (invitation.IsValid && DateTime.Now < expirationDate)
             {
                 var householdName = db.Households.Find(invitation.HouseholdId).HouseholdName;
-                TempData["Message"] = $"Thank you for accepting my invitation to join the {householdName} House!";
+                user.HouseholdId = invitation.HouseholdId;
+
+                db.SaveChanges();
 
                 roleHelper.UpdateUserRole(user.Id, "Member");
                 await AuthorizeExtensions.RefreshAuthentication(HttpContext, user);
 
+                ViewBag.Message2 = $"Thank you for accepting my invitation to join the {householdName} House!";
                 return RedirectToAction("Index", "Home");
             }
 
             ViewBag.Error = "The invitation was not valid";
-            return View("NotFoundError", invitation);
+            return RedirectToAction("Index", "Home");
         }
 
         //

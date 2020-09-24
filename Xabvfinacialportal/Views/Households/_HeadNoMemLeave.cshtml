@@ -1,0 +1,17 @@
+﻿@model Xabvfinacialportal.ViewModels.LeaveHHHeadVM
+
+@using (Html.BeginForm("LeaveAsyncHOH", "Households", FormMethod.Post))
+{
+    <div class="modal-body">
+        <h1 class="full-width text-center">LEAVE AND DELETE HOUSEHOLD?</h1>
+        <hr />
+        <br />
+        @Html.AntiForgeryToken()
+        @Html.Hidden("MemberListId", null)
+        <h6 class="full-width text-center font-italic">If you submit this form you will leave your Household and it will be deleted.</h6>
+    </div>  
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Delete this Household FOREVER</button>
+        <button type="button" class="btn btn-light" data-dismiss="modal">Take me Back!</button>
+    </div>
+}

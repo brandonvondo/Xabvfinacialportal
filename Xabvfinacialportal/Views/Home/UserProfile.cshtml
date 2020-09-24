@@ -4,6 +4,7 @@
 @{
     UserHelper userHelper = new UserHelper();
     StringHelper stringHelper = new StringHelper();
+    HouseholdHelper householdHelper = new HouseholdHelper();
     bool myPage = false;
     var budgetList = Model.Budgets.Where(b => b.UserId == Model.Id).ToList();
     var itemCount = 0;
@@ -199,6 +200,20 @@
                                     }
                                 </span>
                             </div>
+                            @if (Model.HouseholdId != null)
+                            {
+                                var house = householdHelper.GetHouseholdById((int)Model.HouseholdId);
+                                var houseName = house.HouseholdName;
+                                <hr />
+                            <div class="row">
+                                <span class="col-6">
+                                    Household
+                                </span>
+                                <span class="col-6 text-muted">
+                                    @houseName
+                                </span>
+                            </div>
+                            }
                         </div>
                     </div>
                     <div class="col-lg-8 border-left-lg">
