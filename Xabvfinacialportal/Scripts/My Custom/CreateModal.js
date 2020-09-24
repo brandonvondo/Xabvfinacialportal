@@ -1,5 +1,5 @@
 ﻿function createModal(purpose) {
-    var nUrl = `/CreateModal/CreateMultiModal/purpose=${purpose}`
+    var nUrl = `/CreateModal/CreateMultiModal/${purpose}`
 
     $('#loader').show();
     $('#ajax-shell').html('');
