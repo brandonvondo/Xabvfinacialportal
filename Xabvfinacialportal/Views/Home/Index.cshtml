@@ -92,7 +92,7 @@ else
                             string chartName = $"pieChart{budget.Id}";
                             var chartData = userHelper.BudgetItemGraphData(budget.Id);
                             var chartLables = userHelper.BudgetItemGraphLables(budget.Id);
-                            <div class="card card-inverse-primary budget-card">
+                            <div class="card card-inverse-primary budget-card mt-4">
                                 <div class="card-header">
                                     <div class="row">
                                         <div class="col-6 text-center">
@@ -236,7 +236,7 @@ else
                             string chartName = $"pieChart{budget.Id}";
                             var chartData = userHelper.BudgetItemGraphData(budget.Id);
                             var chartLables = userHelper.BudgetItemGraphLables(budget.Id);
-                            <div class="card card-inverse-primary budget-card">
+                            <div class="card card-inverse-primary budget-card mt-4">
                                 <div class="card-header">
                                     <div class="row">
                                         <div class="col-6 text-center">
@@ -283,7 +283,7 @@ else
                                                 }
                                                 else
                                                 {
-                                                    <li>
+                                                    <li class="no-bullets">
                                                         <h3 class="text-center">No Budget Items for '@budget.BudgetName'</h3>
                                                     </li>
                                                 }

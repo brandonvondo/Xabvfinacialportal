@@ -9,11 +9,6 @@
         <div class="row">
             <h1 class="text-center onehPnt">
                 @Model.AccountName
-                @if (User.Identity.GetUserId() == Model.UserId)
-                {
-
-                    <button class="btn btn-primary btn-icon mr-4"><i class="mdi mdi-pencil"></i></button>
-                }
             </h1>
         </div>
         <div class="row">
@@ -64,11 +59,7 @@
                                     <div class="card">
                                         <div class="card-body card-inverse-danger">
                                             <h2 class="text-center">
-                                                Warning Balance @if (User.Identity.GetUserId() == Model.UserId)
-                                                {
-
-                                                    <button class="btn btn-primary btn-icon accountedit-btn"><i class="mdi mdi-pencil"></i></button>
-                                                }
+                                                Warning Balance 
                                             </h2>
                                             <br />
                                             <h1 class="text-center">
