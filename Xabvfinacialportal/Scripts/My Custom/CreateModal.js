@@ -14,7 +14,8 @@
         .then(function successCallback(response) {
             $('#loader').hide();
             $('#ajax-shell').html(response);
-            $('#Amount').inputmask();
+            $('#StartingBalance').inputmask();
+            $('#TargetValue').inputmask();
         }, function errorCallback(reponse) {
             swal('Something went wrong!');
         });
